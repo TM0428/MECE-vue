@@ -1,17 +1,17 @@
 <template>
     <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    <MetadataEditor />
+    <OpfFileEditor />
 </template>
 
 <script>
 // import HelloWorld from './components/HelloWorld.vue'
-import MetadataEditor from "./pages/MetadataEditor.vue";
+import OpfFileEditor from "./pages/OpfFileEditor.vue";
 
 export default {
     name: "App",
     components: {
         // HelloWorld,
-        MetadataEditor,
+        OpfFileEditor,
     },
 };
 </script>
