@@ -26,7 +26,7 @@
                 <v-col cols="12" md="6">
                     <v-select
                         v-model="metadata.type"
-                        :items="type"
+                        :items="types"
                         item-title="name"
                         item-value="type"
                         label="Type"
@@ -65,6 +65,17 @@ export default {
                 { lang: "ja", name: "Japanese" },
                 { lang: "en", name: "English" },
                 { lang: "de", name: "German" },
+            ],
+            types: [
+                { type: "comic", name: "Comic" },
+                { type: "novel", name: "Novel" },
+                { type: "magazine", name: "Magazine" },
+                { type: "photo", name: "Photo" },
+                { type: "video", name: "Video" },
+                { type: "music", name: "Music" },
+                { type: "game", name: "Game" },
+                { type: "application", name: "Application" },
+                { type: "unknown", name: "Unknown" },
             ],
         };
     },

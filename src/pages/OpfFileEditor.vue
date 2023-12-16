@@ -19,8 +19,8 @@
         </div>
         <div class="contents-editor">
             <!-- epub.title is array and made contents -->
-            <div v-for="title in epub_data.title" :key="title.id">
-                <TitleEdit :title_prop="title" />
+            <div v-if="epub_data.title">
+                <TitleEdit :title_prop="epub_data.title" />
             </div>
             <div v-for="creator in epub_data.creators" :key="creator.id">
                 <CreatorEdit :creator_prop="creator" />
@@ -28,14 +28,19 @@
             <div v-if="epub_data.description">
                 <DescriptionEdit :description_prop="epub_data.description" />
             </div>
+            <div v-if="epub_data.publisher">
+                <PublisherEdit :publisher_prop="epub_data.publisher" />
+            </div>
             <div v-if="epub_data.metadata">
                 <MetadataEdit :metadata_prop="epub_data.metadata" />
             </div>
         </div>
         <div class="contents-selector">
             <!-- create element button, can select title and creator -->
-            <v-btn color="primary" @click="create_init">
-                create metadata
+            <v-btn color="primary" @click="createInit"> create metadata </v-btn>
+            <!-- <v-btn color="primary" @click="createMetadata"> create title </v-btn> -->
+            <v-btn color="primary" @click="start_overlay = !start_overlay">
+                debug
             </v-btn>
         </div>
     </v-app>
@@ -43,11 +48,18 @@
 
 <script>
 import { STEPS } from "../js/statics.js";
-import { Epub } from "../js/metadata.js";
+import {
+    Title,
+    Creator,
+    Publisher,
+    Description,
+    Metadata,
+} from "../js/metadata.js";
 // component imports
 import CreatorEdit from "../components/CreatorEdit.vue";
 import TitleEdit from "../components/TitleEdit.vue";
 import DescriptionEdit from "../components/DescriptionEdit.vue";
+import PublisherEdit from "../components/PublisherEdit.vue";
 import MetadataEdit from "../components/MetadataEdit.vue";
 
 export default {
@@ -57,26 +69,33 @@ export default {
         TitleEdit,
         DescriptionEdit,
         MetadataEdit,
+        PublisherEdit,
     },
     data() {
         return {
             message: "Metadata Editor",
             steps: STEPS,
-            epub_data: new Epub(),
+            epub_data: {
+                title: null,
+                creators: [],
+                description: null,
+                publisher: null,
+                metadata: null,
+            },
+            start_overlay: true,
+            isbn: "",
         };
     },
-    mounted() {
-        this.epub_data = new Epub();
-        // this.epub_data.create_title();
-        console.log(this.epub_data.title);
-    },
+    mounted() {},
     methods: {
-        create_init() {
-            this.epub_data = new Epub();
-            this.epub_data.create();
-            console.log(this.epub_data);
+        createInit() {
+            this.epub_data.title = new Title();
+            this.epub_data.creators.push(new Creator());
+            this.epub_data.description = new Description();
+            this.epub_data.publisher = new Publisher();
+            this.epub_data.metadata = new Metadata();
         },
-        create_metadata(mode = "title") {
+        createMetadata(mode = "title") {
             mode = "title";
             // create editor component
             // add to contents-editor
@@ -87,6 +106,9 @@ export default {
             } else if (mode == "creator") {
                 // this.epub_data.creator.push(new Creator());
             }
+        },
+        debug() {
+            console.log(this.epub_data);
         },
     },
 };

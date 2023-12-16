@@ -1,30 +1,28 @@
 <template>
-    <v-sheet border rounded class="ma-2">
-        <!-- Creator metadata form
-            required fields: title, title-yomi, id(not editable)
-            -->
-        <div class="text-h3 ma-1">Title</div>
+    <v-sheet border rounded class="ma-3">
+        <div class="text-h3 ma-3">Publisher</div>
+        <!-- publisher name, yomi, id(readonly, disable) -->
         <v-form class="ma-3">
             <v-row>
                 <v-col cols="12" md="6">
                     <v-text-field
-                        v-model="title.title"
-                        label="Title Name"
+                        v-model="publisher.name"
+                        label="Publisher Name"
                         required
-                        @change="handleTitleClick"
+                        @change="handlePublisherClick"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6">
                     <v-text-field
-                        v-model="title.title_yomi"
-                        label="Title Name Yomi"
-                        @change="handleTitleClick"
+                        v-model="publisher.name_yomi"
+                        label="Publisher Name Yomi"
+                        @change="handlePublisherClick"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6">
                     <v-text-field
-                        v-model="title.id"
-                        label="Title ID"
+                        v-model="publisher.id"
+                        label="Publisher ID"
                         readonly
                         disabled
                     ></v-text-field>
@@ -35,24 +33,24 @@
 </template>
 
 <script>
-import { Title } from "../js/metadata.js";
+import { Publisher } from "../js/metadata.js";
 
 export default {
-    name: "TitleEdit",
+    name: "PublisherEdit",
     props: {
-        title_prop: {
-            type: Title,
+        publisher_prop: {
+            type: Publisher,
             required: true,
         },
     },
     data() {
         return {
-            title: this.title_prop,
+            publisher: this.publisher_prop,
         };
     },
     created() {
-        console.log("TitleEdit created");
-        console.log(this.title);
+        console.log("PublisherEdit created");
+        console.log(this.publisher);
     },
     methods: {},
 };
