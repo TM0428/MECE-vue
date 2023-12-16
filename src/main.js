@@ -7,6 +7,8 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 import { mdiAccount } from '@mdi/js'
+// VueRouter
+import router from './router.js'
 
 
 const vuetify = createVuetify({
@@ -26,4 +28,4 @@ const vuetify = createVuetify({
 
 
 
-createApp(App).use(vuetify).mount('#app')
+createApp(App).use(vuetify).use(router).mount('#app')

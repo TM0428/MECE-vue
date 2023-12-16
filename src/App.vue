@@ -1,17 +1,13 @@
 <template>
     <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    <OpfFileEditor />
+    <router-view />
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
-import OpfFileEditor from "./pages/OpfFileEditor.vue";
-
 export default {
     name: "App",
     components: {
         // HelloWorld,
-        OpfFileEditor,
     },
 };
 </script>
