@@ -31,7 +31,6 @@
                         item-value="type"
                         label="Type"
                         required
-                        @update:model-value="setType"
                     ></v-select>
                 </v-col>
                 <v-col cols="12" md="6">
@@ -48,7 +47,7 @@
 </template>
 
 <script>
-import { Metadata } from "../js/metadata.js";
+import { Metadata } from "../js/epub.js";
 
 export default {
     name: "AnotherMetadataEdit",

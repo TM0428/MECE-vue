@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { Description } from "../js/metadata.js";
+import { Description } from "../js/epub.js";
 
 export default {
     name: "DescriptionEdit",

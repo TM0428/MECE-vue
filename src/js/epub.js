@@ -1,5 +1,5 @@
 export class Creator {
-    constructor(name, name_yomi, role="aut", seq, id, index=0){
+    constructor(name="", name_yomi="", role="aut", seq=1, id="creator01", index=0){
         this.name = name;
         this.name_yomi = name_yomi;
         this.role = role;
@@ -26,7 +26,7 @@ export class Publisher{
 }
 
 export class Description{
-    constructor(description){
+    constructor(description=""){
         this.description = description;
     }
 }
@@ -55,30 +55,26 @@ export class Metadata{
 
 export class Epub{
     constructor(){
-        this.metadata = undefined;
-        // creators is array of Creator
+        this.title = undefined;
+        // creators and publisher is array of Creator
         this.creators = [];
-        // title is array of Title
-        this.title = [];
-        this.publisher = undefined;
+        this.publisher = [];
         this.description = undefined;
+        this.metadata = undefined;
     }
-    create(){
-        this.metadata = new Metadata();
-        this.metadata.create_id();
-        this.creators = [];
-        this.title = [];
-        this.publisher = new Publisher("", "");
-        this.description = new Description("");
-        this.create_title();
+    createInit(){
+        this.title = new Title("", "", "title");
         this.create_creator();
+        this.create_publisher();
+        this.description = new Description("");
+        this.metadata = new Metadata();
     }
-    create_title(){
-        if(this.title.length == 0){
-            this.title = [new Title("", "")];
+    create_publisher(){
+        if(this.publisher.length == 0){
+            this.publisher = [new Publisher("", "", "publisher")];
         }
         else{
-            this.title.push(new Title("","", "title"+this.title.length.toString()));
+            this.publisher.push(new Publisher("","", "publisher"+this.title.length.toString()));
         }
     }
     create_creator(){

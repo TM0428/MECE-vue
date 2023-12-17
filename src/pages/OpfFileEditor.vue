@@ -28,8 +28,11 @@
             <div v-if="epub_data.description">
                 <DescriptionEdit :description_prop="epub_data.description" />
             </div>
-            <div v-if="epub_data.publisher">
+            <!-- <div v-if="epub_data.publisher">
                 <PublisherEdit :publisher_prop="epub_data.publisher" />
+            </div> -->
+            <div v-for="publisher in epub_data.publishers" :key="publisher.id">
+                <PublisherEdit :publisher_prop="publisher" />
             </div>
             <div v-if="epub_data.metadata">
                 <MetadataEdit :metadata_prop="epub_data.metadata" />
@@ -39,9 +42,7 @@
             <!-- create element button, can select title and creator -->
             <v-btn color="primary" @click="createInit"> create metadata </v-btn>
             <!-- <v-btn color="primary" @click="createMetadata"> create title </v-btn> -->
-            <v-btn color="primary" @click="start_overlay = !start_overlay">
-                debug
-            </v-btn>
+            <v-btn color="primary" @click="debug"> debug </v-btn>
         </div>
     </v-app>
 </template>
@@ -49,12 +50,13 @@
 <script>
 import { STEPS } from "../js/statics.js";
 import {
+    Epub,
     Title,
     Creator,
     Publisher,
     Description,
     Metadata,
-} from "../js/metadata.js";
+} from "../js/epub.js";
 // component imports
 import CreatorEdit from "../components/CreatorEdit.vue";
 import TitleEdit from "../components/TitleEdit.vue";
@@ -71,22 +73,30 @@ export default {
         MetadataEdit,
         PublisherEdit,
     },
+    props: {
+        epub_data_prop: {
+            type: Epub,
+            required: true,
+        },
+    },
+    setup(props) {
+        console.log("MetadataEditor setup");
+        console.log(props);
+    },
     data() {
         return {
             message: "Metadata Editor",
             steps: STEPS,
-            epub_data: {
-                title: null,
-                creators: [],
-                description: null,
-                publisher: null,
-                metadata: null,
-            },
+            epub_data: this.epub_data_prop || new Epub(),
             start_overlay: true,
             isbn: "",
         };
     },
-    mounted() {},
+    mounted() {
+        //  this.createInit();
+        console.log("MetadataEditor mounted");
+        console.log(this.epub_data_prop);
+    },
     methods: {
         createInit() {
             this.epub_data.title = new Title();

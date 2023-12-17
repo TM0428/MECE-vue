@@ -11,14 +11,12 @@
                         v-model="title.title"
                         label="Title Name"
                         required
-                        @change="handleTitleClick"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6">
                     <v-text-field
                         v-model="title.title_yomi"
                         label="Title Name Yomi"
-                        @change="handleTitleClick"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6">
@@ -35,7 +33,7 @@
 </template>
 
 <script>
-import { Title } from "../js/metadata.js";
+import { Title } from "../js/epub.js";
 
 export default {
     name: "TitleEdit",

@@ -19,7 +19,7 @@
                             </p>
                         </v-card-text>
                         <v-card-actions>
-                            <v-btn color="primary" href="/step1">
+                            <v-btn color="primary" @click="makeEpubInit">
                                 Create new epub file
                             </v-btn>
                         </v-card-actions>
@@ -94,12 +94,22 @@
 </template>
 
 <script>
+import {
+    Epub,
+    Title,
+    Creator,
+    Publisher,
+    Description,
+    Metadata,
+} from "../js/epub.js";
+
 export default {
     name: "StartCreateEpub",
     data() {
         return {
             isbn_dialog: false,
             isbn: "",
+            epub_data: new Epub(),
         };
     },
     methods: {
@@ -146,7 +156,34 @@ export default {
                     // data[0].onix.DescriptiveDetail.TitleDetail.TitleElement[0].TitleElementLevel is string
                     // data[0].onix.DescriptiveDetail.TitleDetail.TitleElement[0].TitleText is object
                     // data[0].onix.Descriptive
+                    this.epub_data = new Epub();
+                    this.epub_data.title = new Title(data[0].summary.title, "");
+                    this.epub_data.creators.push(
+                        new Creator(data[0].summary.author[0], "")
+                    );
+                    this.epub_data.publisher = new Publisher(
+                        data[0].summary.publisher,
+                        ""
+                    );
+                    this.epub_data.description = new Description();
+                    this.epub_data.metadata = new Metadata();
+
+                    console.log(this.epub_data);
+                    this.$router.push({
+                        name: "OpfFileEditor",
+                        params: { epub_data_prop: this.epub_data },
+                    });
                 });
+        },
+        makeEpubInit() {
+            // make epub data and router push to OpfFileEditor
+            this.epub_data = new Epub();
+            this.epub_data.createInit();
+            console.log(this.epub_data);
+            this.$router.push({
+                name: "OpfFileEditor",
+                params: { epub_data_prop: this.epub_data },
+            });
         },
     },
 };

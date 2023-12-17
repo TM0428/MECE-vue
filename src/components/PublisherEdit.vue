@@ -9,14 +9,12 @@
                         v-model="publisher.name"
                         label="Publisher Name"
                         required
-                        @change="handlePublisherClick"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6">
                     <v-text-field
                         v-model="publisher.name_yomi"
                         label="Publisher Name Yomi"
-                        @change="handlePublisherClick"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6">
@@ -33,7 +31,7 @@
 </template>
 
 <script>
-import { Publisher } from "../js/metadata.js";
+import { Publisher } from "../js/epub.js";
 
 export default {
     name: "PublisherEdit",

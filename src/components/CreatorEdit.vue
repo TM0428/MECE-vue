@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { Creator } from "../js/metadata.js";
+import { Creator } from "../js/epub.js";
 import { ROLES } from "../js/statics.js";
 
 export default {
