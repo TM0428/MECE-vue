@@ -10,7 +10,7 @@ export class Creator {
 }
 
 export class Title{
-    constructor(title, title_yomi, id="title"){
+    constructor(title="", title_yomi="", id="title"){
         this.title = title;
         this.title_yomi = title_yomi;
         this.id = id;
@@ -18,7 +18,7 @@ export class Title{
 }
 
 export class Publisher{
-    constructor(name, name_yomi, id="publisher"){
+    constructor(name="", name_yomi="", id="publisher"){
         this.name = name;
         this.name_yomi = name_yomi;
         this.id = id;

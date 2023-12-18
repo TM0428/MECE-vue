@@ -19,7 +19,7 @@
                             </p>
                         </v-card-text>
                         <v-card-actions>
-                            <v-btn color="primary" @click="makeEpubInit">
+                            <v-btn color="primary" @click="createEpubInit">
                                 Create new epub file
                             </v-btn>
                         </v-card-actions>
@@ -95,13 +95,13 @@
 
 <script>
 import {
-    Epub,
     Title,
     Creator,
     Publisher,
     Description,
     Metadata,
 } from "../js/epub.js";
+import { useEpubStore } from "../stores/epub_store.js";
 
 export default {
     name: "StartCreateEpub",
@@ -109,7 +109,7 @@ export default {
         return {
             isbn_dialog: false,
             isbn: "",
-            epub_data: new Epub(),
+            epub_store: useEpubStore(),
         };
     },
     methods: {
@@ -127,62 +127,56 @@ export default {
                 })
                 .then((data) => {
                     console.log(data);
-                    // data is array
-                    // data[0] is object
-                    // data[0].summary is object
-                    // data[0].summary.isbn is string
-                    // data[0].summary.title is string
-                    // data[0].summary.volume is string
-                    // data[0].summary.series is string
-                    // data[0].summary.cover is string
-                    // data[0].summary.author is array
-                    // data[0].summary.author[0] is string
-                    // data[0].summary.publisher is string
-                    // data[0].summary.pubdate is string
-                    // data[0].summary.cover is string
-                    // data[0].onix is object
-                    // data[0].onix.DescriptiveDetail is object
-                    // data[0].onix.DescriptiveDetail.TitleDetail is object
-                    // data[0].onix.DescriptiveDetail.TitleDetail.TitleType is string
-                    // data[0].onix.DescriptiveDetail.TitleDetail.TitleElement is array
-                    // data[0].onix.DescriptiveDetail.TitleDetail.TitleElement[0] is object
-                    // data[0].onix.DescriptiveDetail.TitleDetail.TitleElement[0].TitleElementLevel is string
-                    // data[0].onix.DescriptiveDetail.TitleDetail.TitleElement[0].TitleText is object
-                    // data[0].onix.DescriptiveDetail.TitleDetail.TitleElement[0].TitleText.collationkey is string
-                    // data[0].onix.DescriptiveDetail.TitleDetail.TitleElement[0].TitleText.content is string
-                    // data[0].onix.DescriptiveDetail.TitleDetail.TitleElement[0].TitleText.textformat is string
-                    // data[0].onix.DescriptiveDetail.TitleDetail.TitleElement[0].TitleText.textcase is string
-                    // data[0].onix.DescriptiveDetail.TitleDetail.TitleElement[0].TitleText.textscript is string
-                    // data[0].onix.DescriptiveDetail.TitleDetail.TitleElement[0].TitleElementLevel is string
-                    // data[0].onix.DescriptiveDetail.TitleDetail.TitleElement[0].TitleText is object
-                    // data[0].onix.Descriptive
-                    this.epub_data = new Epub();
-                    this.epub_data.title = new Title(data[0].summary.title, "");
-                    this.epub_data.creators.push(
-                        new Creator(data[0].summary.author[0], "")
+                    // reset epub store
+                    this.epub_store.reset();
+                    this.epub_store.title = new Title(
+                        data[0].onix.DescriptiveDetail.TitleDetail.TitleElement
+                            .TitleText.content || "",
+                        data[0].onix.DescriptiveDetail.TitleDetail.TitleElement
+                            .TitleText.collationkey || ""
                     );
-                    this.epub_data.publisher = new Publisher(
-                        data[0].summary.publisher,
-                        ""
-                    );
-                    this.epub_data.description = new Description();
-                    this.epub_data.metadata = new Metadata();
+                    for (
+                        let i = 0;
+                        i < data[0].onix.DescriptiveDetail.Contributor.length;
+                        i++
+                    ) {
+                        let id =
+                            "creator" + (i + 1).toString().padStart(2, "0");
+                        this.epub_store.creators.push(
+                            new Creator(
+                                data[0].onix.DescriptiveDetail.Contributor[i]
+                                    .PersonName.content || "",
+                                data[0].onix.DescriptiveDetail.Contributor[i]
+                                    .PersonName.collationkey || "",
+                                "aut",
+                                Number(
+                                    data[0].onix.DescriptiveDetail.Contributor[
+                                        i
+                                    ].SequenceNumber || i + 1
+                                ),
+                                id,
+                                i
+                            )
+                        );
+                    }
 
-                    console.log(this.epub_data);
+                    this.epub_store.publishers.push(
+                        new Publisher(data[0].summary.publisher || "", "")
+                    );
+                    this.epub_store.description = new Description();
+                    this.epub_store.metadata = new Metadata();
+
+                    console.log(this.epub_store);
                     this.$router.push({
                         name: "OpfFileEditor",
-                        params: { epub_data_prop: this.epub_data },
                     });
                 });
         },
-        makeEpubInit() {
+        createEpubInit() {
             // make epub data and router push to OpfFileEditor
-            this.epub_data = new Epub();
-            this.epub_data.createInit();
-            console.log(this.epub_data);
+            this.epub_store.createInit();
             this.$router.push({
                 name: "OpfFileEditor",
-                params: { epub_data_prop: this.epub_data },
             });
         },
     },

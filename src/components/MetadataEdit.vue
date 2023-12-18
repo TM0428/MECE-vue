@@ -6,7 +6,7 @@
             <v-row>
                 <v-col cols="12" md="6">
                     <v-select
-                        v-model="metadata.lang"
+                        v-model="metadata.language"
                         :items="lang"
                         item-title="name"
                         item-value="lang"

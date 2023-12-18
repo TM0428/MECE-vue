@@ -9,6 +9,8 @@ import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 import { mdiAccount } from '@mdi/js'
 // VueRouter
 import router from './router.js'
+// pinia
+import { createPinia } from 'pinia'
 
 
 const vuetify = createVuetify({
@@ -28,4 +30,4 @@ const vuetify = createVuetify({
 
 
 
-createApp(App).use(vuetify).use(router).mount('#app')
+createApp(App).use(vuetify).use(router).use(createPinia()).mount('#app')
