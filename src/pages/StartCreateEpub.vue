@@ -174,6 +174,7 @@ export default {
         },
         createEpubInit() {
             // make epub data and router push to OpfFileEditor
+            this.epub_store.reset();
             this.epub_store.createInit();
             this.$router.push({
                 name: "OpfFileEditor",
