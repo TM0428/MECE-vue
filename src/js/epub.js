@@ -32,7 +32,7 @@ export class Description{
 }
 
 export class Metadata{
-    constructor(language="ja", id, type="comic", modified="2000-01-01T00:00:00Z"){
+    constructor(language="ja", id, type="comic", modified="2000-01-01T00:00"){
         this.language = language;
         if(id == undefined){
             this.create_id();
