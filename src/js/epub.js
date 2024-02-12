@@ -53,6 +53,7 @@ export class Metadata{
     }
 }
 
+
 export class Epub{
     constructor(){
         this.title = undefined;

@@ -1,5 +1,6 @@
 import StartCreateEpub from './pages/StartCreateEpub.vue';
 import OpfFileEditor from './pages/OpfFileEditor.vue';
+import SourceFileImport from './pages/SourceFileImport.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
@@ -12,6 +13,11 @@ const routes = [
         path: '/step1',
         name: 'OpfFileEditor',
         component: OpfFileEditor,
+    },
+    {
+        path: '/step2',
+        name: 'SourceFileEditor',
+        component: SourceFileImport,
     },
 ];
 

@@ -43,6 +43,9 @@
             <v-btn color="primary" @click="createInit"> create metadata </v-btn>
             <!-- <v-btn color="primary" @click="createMetadata"> create title </v-btn> -->
             <v-btn color="primary" @click="debug"> debug </v-btn>
+            <router-link to="/step2">
+                <v-btn color="primary"> next </v-btn>
+            </router-link>
         </div>
     </v-app>
 </template>
