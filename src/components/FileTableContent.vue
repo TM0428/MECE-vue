@@ -8,25 +8,20 @@
                     <span class="headline"> {{ file.name }} </span>
                 </v-card-title>
                 <v-card-text>
-                    <div
-                        v-if="
-                            file.type == 'image/png' || file.type == 'image/jpg'
-                        "
-                    >
-                        <img
-                            :src="createObjectURL(file)"
-                            alt="Preview"
-                            style="width: 100%"
-                        />
-                    </div>
-                    <div v-else>
-                        <!-- show raw content -->
+                    <div v-if="file.type.indexOf('image') == -1">
                         <textarea
                             :value="content_text"
                             style="width: 100%; height: 200px"
                             readonly
                         >
                         </textarea>
+                    </div>
+                    <div v-else>
+                        <img
+                            :src="createObjectURL(file)"
+                            alt="Preview"
+                            style="width: 100%"
+                        />
                     </div>
                 </v-card-text>
                 <v-card-actions>
@@ -90,14 +85,15 @@ export default {
         };
     },
     mounted() {
-        if (this.file.type != "image/png" && this.file.type != "image/jpg") {
+        // if file type is not image, show content_text
+        if (this.file.type.indexOf("image") == -1) {
+            this.content_text = this.file.text;
             const reader = new FileReader();
             reader.onload = (e) => {
                 this.content_text = e.target.result;
             };
             reader.readAsText(this.file.content);
         }
-        // console.log(this.file);
     },
     methods: {
         formatSizeUnits(bytes) {
@@ -121,18 +117,19 @@ export default {
         },
         changeDisplayStyle() {
             console.log(this.displayType);
-            this.$emit("change-display-style", this.displayType);
+            // this.$emit("change-display-style", this.displayType);
         },
     },
     // if change file, update content_text
     watch: {
         file: function (new_file) {
-            if (new_file.type != "image/png" && new_file.type != "image/jpg") {
+            if (this.file.type.indexOf("image") == -1) {
+                this.content_text = this.file.text;
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     this.content_text = e.target.result;
                 };
-                reader.readAsText(new_file);
+                reader.readAsText(this.file.content);
             }
             this.displayType = new_file.page_style;
         },
