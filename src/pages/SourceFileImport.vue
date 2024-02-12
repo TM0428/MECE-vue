@@ -1,17 +1,5 @@
 <template>
     <div>
-        <!-- <v-btn color="primary" @click="importFile"> Import Source File </v-btn> -->
-        <!-- <FileImportDialog v-model="dialog" /> -->
-        <v-file-input
-            v-model="files"
-            label="Select Source File"
-            multiple
-            show-size
-            show-type
-            @change="importFile"
-            webkitdirectory
-        ></v-file-input>
-        <FileTable :files="files" />
         <v-row>
             <v-col> ファイル表示形式: </v-col>
             <v-col>
@@ -24,6 +12,18 @@
                 ></v-select>
             </v-col>
         </v-row>
+        <!-- <v-btn color="primary" @click="importFile"> Import Source File </v-btn> -->
+        <!-- <FileImportDialog v-model="dialog" /> -->
+        <v-file-input
+            v-model="files"
+            label="Select Source File"
+            multiple
+            show-size
+            show-type
+            @change="importFile"
+            webkitdirectory
+        ></v-file-input>
+        <FileTable :files="files" />
     </div>
 </template>
 
@@ -69,26 +69,24 @@ export default {
 
             // add value to each file
             // styles: right-left, left-right, center
-            // let value = 0;
+            let value = 0;
             this.files.forEach((file) => {
-                // let content_file = file;
-                // if (this.displayType === "right-left") {
-                //     if (value % 2 === 0) {
-                //         content_file.page_style = "right";
-                //     } else {
-                //         content_file.page_style = "left";
-                //     }
-                // } else if (this.displayType === "left-right") {
-                //     if (value % 2 === 0) {
-                //         content_file.page_style = "left";
-                //     } else {
-                //         content_file.page_style = "right";
-                //     }
-                // } else if (this.displayType === "center") {
-                //     content_file.page_style = "center";
-                // }
-                this.content_files.push(file);
-                // value++;
+                if (this.displayType === "right-left") {
+                    if (value % 2 === 0) {
+                        file.page_style = "right";
+                    } else {
+                        file.page_style = "left";
+                    }
+                } else if (this.displayType === "left-right") {
+                    if (value % 2 === 0) {
+                        file.page_style = "left";
+                    } else {
+                        file.page_style = "right";
+                    }
+                } else if (this.displayType === "center") {
+                    file.page_style = "center";
+                }
+                value++;
             });
             this.dialog = true;
         },

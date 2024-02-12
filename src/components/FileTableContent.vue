@@ -37,7 +37,9 @@
             </v-card>
         </v-dialog>
     </td>
-    <td>formatSizeUnits(file.contet.size)</td>
+    <td>
+        {{ formatSizeUnits(file.size) }}
+    </td>
     <td>{{ file.type }}</td>
     <td>
         <v-icon :icon="mdiArrowUpIcon"></v-icon>
@@ -45,10 +47,12 @@
     </td>
     <td>
         <v-select
-            v-model="page_style_value"
-            :items="page_styles"
-            item-text="text"
+            label="表示形式"
+            v-model="displayType"
+            :items="styles"
+            item-title="text"
             item-value="value"
+            @change="changeDisplayStyle"
         ></v-select>
     </td>
 </template>
@@ -68,15 +72,15 @@ export default {
             content_text: "",
             mdiArrowUpIcon: mdiArrowUp,
             mdiArrowDownIcon: mdiArrowDown,
-            page_style_value: "right",
-            page_styles: [
+            displayType: "right",
+            styles: [
                 {
                     value: "right",
                     text: "page-spread-right",
                 },
                 {
                     value: "left",
-                    text: "page-spread-left",
+                    text: "page-spred-left",
                 },
                 {
                     value: "center",
@@ -93,8 +97,7 @@ export default {
             };
             reader.readAsText(this.file.content);
         }
-        this.page_style_value = this.file.page_style;
-        console.log(this.file);
+        // console.log(this.file);
     },
     methods: {
         formatSizeUnits(bytes) {
@@ -116,6 +119,10 @@ export default {
         createObjectURL(file) {
             return URL.createObjectURL(file);
         },
+        changeDisplayStyle() {
+            console.log(this.displayType);
+            this.$emit("change-display-style", this.displayType);
+        },
     },
     // if change file, update content_text
     watch: {
@@ -127,6 +134,7 @@ export default {
                 };
                 reader.readAsText(new_file);
             }
+            this.displayType = new_file.page_style;
         },
     },
 };

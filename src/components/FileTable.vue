@@ -11,7 +11,10 @@
         </thead>
         <tbody>
             <tr v-for="file in files" :key="file.id">
-                <FileTableContent :file="file" />
+                <FileTableContent
+                    :file="file"
+                    @change-display-style="handleDisplayStyle"
+                />
             </tr>
         </tbody>
     </v-table>
@@ -34,6 +37,10 @@ export default {
             mdiSortIcon: mdiSort,
         };
     },
-    methods: {},
+    methods: {
+        handleDisplayStyle() {
+            console.log("handleDisplayStyle");
+        },
+    },
 };
 </script>
