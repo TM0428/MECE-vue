@@ -1,5 +1,7 @@
+import { STYLE_CSS } from "./statics.js";
 const fs = require("fs");
 const path = require("path");
+const builder = require("xmlbuilder");
 
 export async function create_epub(epub) {
     await create_folder(epub);
@@ -8,6 +10,8 @@ export async function create_epub(epub) {
     }
     create_mimetype(epub);
     create_conteiner_xml(epub);
+    await image_copy(epub);
+    create_style_css(epub);
     create_standard_opf(epub);
 }
 
@@ -49,6 +53,9 @@ async function create_folder(epub) {
     if (!fs.existsSync(working_folder + "/item")) {
         fs.mkdirSync(working_folder + "/item");
     }
+    fs.mkdirSync(working_folder + "/item/image");
+    fs.mkdirSync(working_folder + "/item/style");
+    fs.mkdirSync(working_folder + "/item/xhtml");
 }
 
 function create_mimetype(epub) {
@@ -61,7 +68,6 @@ function create_mimetype(epub) {
 function create_conteiner_xml(epub) {
     const file_name = "conteiner.xml";
     // make xml text
-    const builder = require("xmlbuilder");
     let xml = builder.create("container");
     xml.att("version", "1.0");
     xml.att("xmlns", "urn:oasis:names:tc:opendocument:xmlns:container");
@@ -74,10 +80,70 @@ function create_conteiner_xml(epub) {
     fs.writeFileSync(path, xml.end({ pretty: true }));
 }
 
+async function image_copy(epub) {
+    const path = epub.working_folder + "/item/image";
+    // make output
+    if (!fs.existsSync(path)) {
+        // make output folder recursively
+        fs.mkdirSync(path, { recursive: true });
+    }
+    for (let file of epub.files) {
+        fs.copyFileSync(file.path, path + "/" + file.name);
+        if (file.type.indexOf("image") != -1) {
+            // make xhtml
+            await make_xhtml_from_image(epub, file);
+        }
+    }
+}
+
+async function make_xhtml_from_image(epub, file) {
+    const path = epub.working_folder + "/item/xhtml";
+    // make output
+    if (!fs.existsSync(path)) {
+        // make output folder recursively
+        fs.mkdirSync(path, { recursive: true });
+    }
+    // make xhtml
+    const xhtml = builder.create("html");
+    xhtml.att("xmlns", "http://www.w3.org/1999/xhtml");
+    xhtml.att("lang", "ja");
+    xhtml.att("xmlns:epub", "http://www.idpf.org/2007/ops");
+    let head = xhtml.ele("head");
+    let meta = head.ele("meta");
+    meta.att("charset", "UTF-8");
+    let title = head.ele("title");
+    title.txt(epub.title.title);
+    let style = head.ele("link");
+    style.att("type", "text/css");
+    style.att("href", "../css/style.css");
+    style.att("rel", "stylesheet");
+    let size = head.ele("meta");
+    size.att("name", "viewport");
+    size.att("content", `width=${file.width}, height=${file.height}`);
+    let body = xhtml.ele("body");
+    let div = body.ele("div");
+    div.att("class", "main");
+    let img = div.ele("img");
+    img.att("src", `../image/${file.name}`);
+    img.att("alt", file.name);
+
+    // write file
+    const xhtml_path = path + "/" + file.name + ".xhtml";
+    fs.writeFileSync(xhtml_path, xhtml.end({ pretty: true }));
+}
+
+function create_style_css(epub) {
+    const file_name = "style.css";
+    // make xml text
+    let css = STYLE_CSS;
+    // write file
+    const path = epub.working_folder + "/item/style/" + file_name;
+    fs.writeFileSync(path, css);
+}
+
 function create_standard_opf(epub) {
     // const file_name = "standard.opf";
     // make xml text
-    const builder = require("xmlbuilder");
     let xml = builder.create("package");
     xml.att("xmlns", "http://www.idpf.org/2007/opf");
     xml.att("unique-identifier", "unique-id");
