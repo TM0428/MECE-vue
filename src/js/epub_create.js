@@ -2,7 +2,7 @@ import { STYLE_CSS } from "./statics.js";
 const fs = require("fs");
 const path = require("path");
 const builder = require("xmlbuilder");
-const archiver = require("archiver");
+const JSZip = require("jszip");
 
 export async function create_epub(epub) {
     await create_folder(epub);
@@ -27,9 +27,7 @@ function append_file(archive, working_folder, folder_path) {
             console.log("folder: " + folder_path + "/" + file);
             append_file(archive, working_folder, folder_path + "/" + file);
         } else {
-            archive.append(fs.readFileSync(file_path), {
-                name: folder_path + "/" + file,
-            });
+            archive.file(folder_path + "/" + file, fs.readFileSync(file_path));
             console.log("append: " + folder_path + "/" + file);
         }
     }
@@ -39,22 +37,14 @@ async function create_epub_file(epub) {
     const folder_path = epub.create_folder;
     const working_folder = folder_path + "/output";
     const file_path = folder_path + "/" + epub.file_name;
-    let archive = archiver("zip", {
-        zlib: { level: 9 }, // Sets the compression level.
-    });
-    let output = fs.createWriteStream(file_path);
-    archive.pipe(output);
-    archive.append("application/epub+zip", {
-        name: "mimetype",
-        store: true,
-    });
-    // TODO: fix this
-    // can't use archive.directory because of the mimetype file
-    // now use archive.append instead of archive.directory
+    const archive = new JSZip();
+    archive.file("mimetype", "application/epub+zip", { compression: "STORE" });
+    archive.folder("META-INF");
+    archive.folder("item");
     append_file(archive, working_folder, "META-INF");
     append_file(archive, working_folder, "item");
-
-    archive.finalize();
+    const content = await archive.generateAsync({ type: "nodebuffer" });
+    fs.writeFileSync(file_path, content);
 }
 
 /**
@@ -210,17 +200,23 @@ async function make_xhtml_from_image(epub, file, file_name) {
 
     let size = head.ele("meta");
     size.att("name", "viewport");
-    const img_render = new Image();
-    img_render.src = URL.createObjectURL(file);
-    img_render.onload = function () {
-        const width = this.width;
-        const height = this.height;
-        size.att("content", `width=${width}, height=${height}`);
+    if (file.width != undefined && file.height != undefined) {
+        console.log("width: " + file.width + ", height: " + file.height);
+        size.att("content", `width=${file.width}, height=${file.height}`);
         fs.writeFileSync(xhtml_path, xhtml.end({ pretty: true }));
-    };
-    img_render.onerror = function () {
-        fs.writeFileSync(xhtml_path, xhtml.end({ pretty: true }));
-    };
+    } else {
+        const img_render = new Image();
+        img_render.src = URL.createObjectURL(file);
+        img_render.onload = function () {
+            const width = this.width;
+            const height = this.height;
+            size.att("content", `width=${width}, height=${height}`);
+            fs.writeFileSync(xhtml_path, xhtml.end({ pretty: true }));
+        };
+        img_render.onerror = function () {
+            fs.writeFileSync(xhtml_path, xhtml.end({ pretty: true }));
+        };
+    }
 }
 
 /**
