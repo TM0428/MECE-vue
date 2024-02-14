@@ -47,7 +47,7 @@
             :items="styles"
             item-title="text"
             item-value="value"
-            @change="changeDisplayStyle"
+            @update:model-value="changeDisplayStyle"
         ></v-select>
     </td>
 </template>
@@ -61,6 +61,7 @@ export default {
     props: {
         file: File,
     },
+    emits: ["change-display-style"],
     data() {
         return {
             dialog: false,
@@ -94,6 +95,8 @@ export default {
             };
             reader.readAsText(this.file.content);
         }
+        this.displayType = this.file.page_style;
+        console.log(this.displayType);
     },
     methods: {
         formatSizeUnits(bytes) {
@@ -117,7 +120,7 @@ export default {
         },
         changeDisplayStyle() {
             console.log(this.displayType);
-            // this.$emit("change-display-style", this.displayType);
+            this.$emit("change-display-style", this.displayType);
         },
     },
     // if change file, update content_text
@@ -132,6 +135,7 @@ export default {
                 reader.readAsText(this.file.content);
             }
             this.displayType = new_file.page_style;
+            console.log(this.displayType);
         },
     },
 };

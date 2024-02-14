@@ -1,8 +1,16 @@
-import { defineStore } from 'pinia'
-import { Title, Creator, Publisher, Description, Metadata } from '../js/epub.js';
+import { defineStore } from "pinia";
+import {
+    Title,
+    Creator,
+    Publisher,
+    Description,
+    Metadata,
+    Epub,
+} from "../js/epub.js";
 
-export const useEpubStore = defineStore('epub', {
+export const useEpubStore = defineStore("epub", {
     state: () => ({
+        epub: Epub,
         title: undefined,
         creators: [],
         publishers: [],
@@ -10,34 +18,35 @@ export const useEpubStore = defineStore('epub', {
         metadata: undefined,
     }),
     actions: {
-        reset(){
+        reset() {
             this.title = undefined;
             this.creators = [];
             this.publishers = [];
             this.description = undefined;
             this.metadata = undefined;
         },
-        createInit(){
+        createInit() {
+            this.epub = new Epub();
             this.title = new Title("", "", "title");
             this.creators = [new Creator("", "", "creator01", 0)];
             this.publishers = [new Publisher("", "", "publisher")];
             this.description = new Description();
             this.metadata = new Metadata();
         },
-        addCreator(creator){
+        addCreator(creator) {
             this.creators.push(creator);
         },
-        addPublisher(publisher){
+        addPublisher(publisher) {
             this.publishers.push(publisher);
         },
-        setTitle(title){
+        setTitle(title) {
             this.title = title;
         },
-        setDescription(description){
+        setDescription(description) {
             this.description = description;
         },
-        setMetadata(metadata){
+        setMetadata(metadata) {
             this.metadata = metadata;
         },
-    }
-})
+    },
+});
