@@ -110,7 +110,8 @@ export class Metadata {
         language = "ja",
         id,
         type = "comic",
-        modified = "2000-01-01T00:00"
+        modified = "2000-01-01T00:00",
+        page_progression_direction = "rtl"
     ) {
         this.language = language;
         if (id == undefined) {
@@ -120,6 +121,7 @@ export class Metadata {
         }
         this.type = type;
         this.modified = modified;
+        this.page_progression_direction = page_progression_direction;
     }
     create_id() {
         // urn:uuid:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx

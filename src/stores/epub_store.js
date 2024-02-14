@@ -19,6 +19,7 @@ export const useEpubStore = defineStore("epub", {
     }),
     actions: {
         reset() {
+            this.epub = undefined;
             this.title = undefined;
             this.creators = [];
             this.publishers = [];

@@ -13,6 +13,10 @@ export async function create_epub(epub) {
     await image_copy(epub);
     create_style_css(epub);
     create_standard_opf(epub);
+    // debug
+    for (let file of epub.files) {
+        console.log(file);
+    }
 }
 
 function deleteFolderRecursive(directory) {
@@ -87,16 +91,33 @@ async function image_copy(epub) {
         // make output folder recursively
         fs.mkdirSync(path, { recursive: true });
     }
-    for (let file of epub.files) {
-        fs.copyFileSync(file.path, path + "/" + file.name);
+    const totalDigits = String(epub.files.length).length;
+    for (let i = 0; i < epub.files.length; i++) {
+        let file = epub.files[i];
         if (file.type.indexOf("image") != -1) {
+            let file_name = file.name;
+            if (file.cover != undefined && file.cover == true) {
+                file_name = "i-cover." + file.name.split(".").pop();
+            } else {
+                // file name is image001.jpg,...image100.jpg
+                file_name =
+                    "i-" +
+                    (i + 1).toString().padStart(totalDigits, "0") +
+                    "." +
+                    file.name.split(".").pop();
+            }
+            fs.copyFileSync(file.path, path + "/" + file_name);
+            file.image_path = "image/" + file_name;
             // make xhtml
-            await make_xhtml_from_image(epub, file);
+            await make_xhtml_from_image(epub, file, file_name);
+        } else {
+            console.log("not image");
+            fs.copyFileSync(file.path, path + "/" + file.name);
         }
     }
 }
 
-async function make_xhtml_from_image(epub, file) {
+async function make_xhtml_from_image(epub, file, file_name) {
     const path = epub.working_folder + "/item/xhtml";
     // make output
     if (!fs.existsSync(path)) {
@@ -124,11 +145,15 @@ async function make_xhtml_from_image(epub, file) {
     let div = body.ele("div");
     div.att("class", "main");
     let img = div.ele("img");
-    img.att("src", `../image/${file.name}`);
-    img.att("alt", file.name);
+    img.att("src", `../image/${file_name}`);
+    img.att("alt", file_name);
 
     // write file
-    const xhtml_path = path + "/" + file.name + ".xhtml";
+    // image file name is i-001.jpg, xhtml file name is p-001.xhtml
+    const xhtml_file_name =
+        "p-" + file_name.split("-")[1].split(".")[0] + ".xhtml";
+    const xhtml_path = path + "/" + xhtml_file_name;
+    file.xhtml_path = "xhtml/" + xhtml_file_name;
     fs.writeFileSync(xhtml_path, xhtml.end({ pretty: true }));
 }
 
@@ -159,8 +184,59 @@ function create_standard_opf(epub) {
     }
     metadata = epub.description.xml(metadata);
     metadata = epub.metadata.xml(metadata);
-    // let manifest = xml.ele("manifest");
-    // let spine = xml.ele("spine");
+    let manifest = xml.ele("manifest");
+    for (let file of epub.files) {
+        let item = manifest.ele("item");
+        // file path is image/i-001.jpg, id is i-001
+        const image_file_path =
+            file.image_path != undefined ? file.image_path : file.path;
+        const image_id = image_file_path.split("/").pop().split(".")[0];
+        item.att("id", image_id);
+        item.att("href", image_file_path);
+        item.att("media-type", file.type);
+        if (file.cover != undefined && file.cover == true) {
+            item.att("properties", "cover-image");
+        }
+        // xhtml
+        if (file.xhtml_path != undefined) {
+            let item = manifest.ele("item");
+            const xhtml_file_path = file.xhtml_path;
+            const xhtml_id = xhtml_file_path.split("/").pop().split(".")[0];
+            item.att("id", xhtml_id);
+            item.att("href", xhtml_file_path);
+            item.att("media-type", "application/xhtml+xml");
+            item.att("fallback", image_id);
+        }
+    }
+    let spine = xml.ele("spine");
+    spine.att("toc", "ncx");
+    console.log(epub.metadata.page_progression_direction);
+    spine.att(
+        "page-progression-direction",
+        epub.metadata.page_progression_direction
+    );
+    for (let file of epub.files) {
+        if (file.xhtml_path != undefined) {
+            let itemref = spine.ele("itemref");
+            const xhtml_file_path = file.xhtml_path;
+            const xhtml_id = xhtml_file_path.split("/").pop().split(".")[0];
+            itemref.att("idref", xhtml_id);
+            itemref.att("linear", "yes");
+            switch (file.page_style) {
+                case "left":
+                    itemref.att("properties", "page-spread-left");
+                    break;
+                case "right":
+                    itemref.att("properties", "page-spread-right");
+                    break;
+                case "center":
+                    itemref.att("properties", "page-spread-center");
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
     const path = epub.working_folder + "/item/standard.opf";
     fs.writeFileSync(path, xml.end({ pretty: true }));

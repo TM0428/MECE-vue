@@ -96,7 +96,6 @@ export default {
             reader.readAsText(this.file.content);
         }
         this.displayType = this.file.page_style;
-        console.log(this.displayType);
     },
     methods: {
         formatSizeUnits(bytes) {
