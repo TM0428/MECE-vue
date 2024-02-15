@@ -12,7 +12,6 @@
                         item-value="lang"
                         label="Language"
                         required
-                        @update:model-value="setLang"
                     ></v-select>
                 </v-col>
                 <v-col cols="12" md="6">
@@ -47,19 +46,12 @@
 </template>
 
 <script>
-import { Metadata } from "../js/epub.js";
+import { useEpubStore } from "@/stores/epub_store";
 
 export default {
     name: "AnotherMetadataEdit",
-    props: {
-        metadata_prop: {
-            type: Metadata,
-            required: true,
-        },
-    },
     data() {
         return {
-            metadata: this.metadata_prop,
             lang: [
                 { lang: "ja", name: "Japanese" },
                 { lang: "en", name: "English" },
@@ -80,15 +72,11 @@ export default {
     },
     created() {
         console.log("AnotherMetadataEdit created");
+        this.epub_store = useEpubStore();
+        this.epub = this.epub_store.epub;
+        this.metadata = this.epub.metadata;
         console.log(this.metadata);
     },
-    methods: {
-        test() {
-            console.log(this.metadata);
-        },
-        setLang() {
-            console.log(this.metadata);
-        },
-    },
+    methods: {},
 };
 </script>

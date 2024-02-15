@@ -31,23 +31,26 @@
 </template>
 
 <script>
-import { Publisher } from "../js/epub.js";
+import { useEpubStore } from "@/stores/epub_store";
 
 export default {
     name: "PublisherEdit",
     props: {
-        publisher_prop: {
-            type: Publisher,
+        id: {
+            type: String,
             required: true,
         },
     },
-    data() {
-        return {
-            publisher: this.publisher_prop,
-        };
-    },
     created() {
         console.log("PublisherEdit created");
+        this.epub_store = useEpubStore();
+        this.epub = this.epub_store.epub;
+        for (let i = 0; i < this.epub.publishers.length; i++) {
+            if (this.epub.publishers[i].id == this.id) {
+                this.publisher = this.epub.publishers[i];
+                break;
+            }
+        }
         console.log(this.publisher);
     },
     methods: {},

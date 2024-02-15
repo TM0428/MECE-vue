@@ -1,6 +1,19 @@
 <template>
     <!-- if file.type == image/png or image/jpg, click and show the image -->
+    <td>
+        <v-checkbox
+            v-model="coverCheck"
+            @change="changeCover"
+            :disabled="file.type.indexOf('image') == -1"
+            hide-details
+        ></v-checkbox>
+    </td>
     <td @click="dialog = true">
+        <v-icon
+            v-if="file.type.indexOf('image') != -1"
+            :icon="mdiImageIcon"
+        ></v-icon>
+        <v-icon v-else :icon="mdiFileIcon"></v-icon>
         {{ file.name }}
         <v-dialog v-model="dialog" max-width="500px">
             <v-card>
@@ -48,26 +61,32 @@
             item-title="text"
             item-value="value"
             @update:model-value="changeDisplayStyle"
+            outlined
+            hide-details
+            class="my-2"
         ></v-select>
     </td>
 </template>
 
 <script>
 // import { ContentFile } from "@/js/epub";
-import { mdiArrowUp, mdiArrowDown } from "@mdi/js";
+import { useEpubStore } from "@/stores/epub_store";
+import { mdiArrowUp, mdiArrowDown, mdiImage, mdiFile } from "@mdi/js";
 
 export default {
     name: "FileTableContent",
     props: {
-        file: File,
+        file_index: Number,
     },
-    emits: ["change-display-style"],
     data() {
         return {
             dialog: false,
+            coverCheck: false,
             content_text: "",
             mdiArrowUpIcon: mdiArrowUp,
             mdiArrowDownIcon: mdiArrowDown,
+            mdiImageIcon: mdiImage,
+            mdiFileIcon: mdiFile,
             displayType: "right",
             styles: [
                 {
@@ -85,7 +104,11 @@ export default {
             ],
         };
     },
-    mounted() {
+    created() {
+        this.epub_store = useEpubStore();
+        this.epub = this.epub_store.epub;
+        this.file = this.epub.files[this.file_index];
+        console.log(this.file);
         // if file type is not image, show content_text
         if (this.file.type.indexOf("image") == -1) {
             this.content_text = this.file.text;
@@ -119,7 +142,11 @@ export default {
         },
         changeDisplayStyle() {
             console.log(this.displayType);
-            this.$emit("change-display-style", this.displayType);
+            this.file.page_style = this.displayType;
+        },
+        changeCover() {
+            console.log(this.coverCheck);
+            this.file.cover = this.coverCheck;
         },
     },
     // if change file, update content_text
@@ -135,6 +162,9 @@ export default {
             }
             this.displayType = new_file.page_style;
             console.log(this.displayType);
+        },
+        file_index: function (new_index) {
+            this.file = this.epub.files[new_index];
         },
     },
 };

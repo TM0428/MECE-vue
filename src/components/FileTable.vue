@@ -2,6 +2,7 @@
     <v-table>
         <thead>
             <tr>
+                <th>Cover</th>
                 <th>File Name</th>
                 <th>File Size</th>
                 <th>File Type</th>
@@ -10,11 +11,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="file in files" :key="file.id">
-                <FileTableContent
-                    :file="file"
-                    @change-display-style="handleDisplayStyle"
-                />
+            <tr v-for="(file, index) in files" :key="index">
+                <FileTableContent :file_index="file.id" />
             </tr>
         </tbody>
     </v-table>
@@ -37,10 +35,6 @@ export default {
             mdiSortIcon: mdiSort,
         };
     },
-    methods: {
-        handleDisplayStyle() {
-            console.log("handleDisplayStyle");
-        },
-    },
+    methods: {},
 };
 </script>
