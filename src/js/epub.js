@@ -146,7 +146,7 @@ export class Metadata {
         metadata_xml.ele("dc:type", this.type);
         metadata_xml.ele("dc:language", this.language);
         // meta
-        let modified = metadata_xml.ele("meta", this.modified);
+        let modified = metadata_xml.ele("meta", this.modified + ":00Z");
         modified.att("property", "dcterms:modified");
         let booktype = metadata_xml.ele("meta");
         booktype.att("content", this.type);

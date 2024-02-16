@@ -14,6 +14,7 @@ export async function create_epub(epub) {
     await image_copy(epub);
     await create_style_css(epub);
     await create_navigation_documents(epub);
+    await create_toc_ncx(epub);
     await create_standard_opf(epub);
     // compile
     await create_epub_file(epub);
@@ -44,7 +45,7 @@ async function create_epub_file(epub) {
     append_file(archive, working_folder, "META-INF");
     append_file(archive, working_folder, "item");
     const content = await archive.generateAsync({ type: "nodebuffer" });
-    fs.writeFileSync(file_path, content);
+    await fs.promises.writeFile(file_path, content);
 }
 
 /**
@@ -90,7 +91,7 @@ async function create_folder(epub) {
         fs.mkdirSync(working_folder + "/item");
     }
     fs.mkdirSync(working_folder + "/item/image");
-    fs.mkdirSync(working_folder + "/item/style");
+    fs.mkdirSync(working_folder + "/item/css");
     fs.mkdirSync(working_folder + "/item/xhtml");
 }
 
@@ -123,7 +124,7 @@ async function create_conteiner_xml(epub) {
     rootfile.att("media-type", "application/oebps-package+xml");
     // write file
     const file_path = epub.working_folder + "/META-INF/" + file_name;
-    await fs.writeFileSync(file_path, xml.end({ pretty: true }));
+    await fs.promises.writeFile(file_path, xml.end({ pretty: true }));
 }
 
 async function image_copy(epub) {
@@ -203,7 +204,7 @@ async function make_xhtml_from_image(epub, file, file_name) {
     if (file.width != undefined && file.height != undefined) {
         console.log("width: " + file.width + ", height: " + file.height);
         size.att("content", `width=${file.width}, height=${file.height}`);
-        fs.writeFileSync(xhtml_path, xhtml.end({ pretty: true }));
+        await fs.promises.writeFile(xhtml_path, xhtml.end({ pretty: true }));
     } else {
         const img_render = new Image();
         img_render.src = URL.createObjectURL(file);
@@ -228,8 +229,8 @@ async function create_style_css(epub) {
     // make xml text
     let css = STYLE_CSS;
     // write file
-    const file_path = epub.working_folder + "/item/style/" + file_name;
-    fs.writeFileSync(file_path, css);
+    const file_path = epub.working_folder + "/item/css/" + file_name;
+    await fs.promises.writeFile(file_path, css);
 }
 
 async function create_navigation_documents(epub) {
@@ -265,10 +266,87 @@ async function create_navigation_documents(epub) {
             a.att("href", item.href);
             a.txt(item.title);
         }
+    } else {
+        // make only p-cover.xhtml
+        let li = ol.ele("li");
+        let a = li.ele("a");
+        a.att("href", "xhtml/p-cover.xhtml");
+        a.txt("Cover");
+    }
+    let nav2 = body.ele("nav");
+    nav2.att("epub:type", "landmarks");
+    let h2 = nav2.ele("h2");
+    h2.txt("Landmarks");
+    if (epub.landmarks != undefined) {
+        for (let item of epub.landmarks) {
+            let ol = nav2.ele("ol");
+            let li = ol.ele("li");
+            let a = li.ele("a");
+            a.att("href", item.href);
+            a.txt(item.title);
+        }
+    } else {
+        // make only p-cover.xhtml
+        let ol = nav2.ele("ol");
+        let li = ol.ele("li");
+        let a = li.ele("a");
+        a.att("epub:type", "cover");
+        a.att("href", "xhtml/p-cover.xhtml");
+        a.txt("Cover");
     }
     // write file
     const file_path = epub.working_folder + "/item/" + file_name;
-    fs.writeFileSync(file_path, xml.end({ pretty: true }));
+    await fs.promises.writeFile(file_path, xml.end({ pretty: true }));
+}
+
+async function create_toc_ncx(epub) {
+    const file_name = "toc.ncx";
+    // make xml text
+    let xml = builder.create("ncx");
+    xml.att("xmlns", "http://www.daisy.org/z3986/2005/ncx/");
+    xml.att("version", "2005-1");
+    let head = xml.ele("head");
+    let meta = head.ele("meta");
+    meta.att("name", "dtb:uid");
+    meta.att("content", epub.metadata.id);
+    let meta2 = head.ele("meta");
+    meta2.att("name", "dtb:depth");
+    meta2.att("content", "1");
+    let meta3 = head.ele("meta");
+    meta3.att("name", "dtb:totalPageCount");
+    meta3.att("content", "0");
+    let meta4 = head.ele("meta");
+    meta4.att("name", "dtb:maxPageNumber");
+    meta4.att("content", "0");
+    let docTitle = xml.ele("docTitle");
+    let text = docTitle.ele("text");
+    text.txt(epub.title.title);
+    let navMap = xml.ele("navMap");
+    if (epub.table != undefined) {
+        for (let item of epub.table) {
+            let navPoint = navMap.ele("navPoint");
+            navPoint.att("id", item.id);
+            navPoint.att("playOrder", item.playOrder);
+            let navLabel = navPoint.ele("navLabel");
+            let text = navLabel.ele("text");
+            text.txt(item.title);
+            let content = navPoint.ele("content");
+            content.att("src", item.href);
+        }
+    } else {
+        // make only p-cover.xhtml
+        let navPoint = navMap.ele("navPoint");
+        navPoint.att("id", "xhtml-p-cover");
+        navPoint.att("playOrder", "1");
+        let navLabel = navPoint.ele("navLabel");
+        let text = navLabel.ele("text");
+        text.txt("Cover");
+        let content = navPoint.ele("content");
+        content.att("src", "xhtml/p-cover.xhtml");
+    }
+    // write file
+    const file_path = epub.working_folder + "/item/" + file_name;
+    await fs.promises.writeFile(file_path, xml.end({ pretty: true }));
 }
 
 /**
@@ -294,6 +372,21 @@ async function create_standard_opf(epub) {
     metadata = epub.description.xml(metadata);
     metadata = epub.metadata.xml(metadata);
     let manifest = xml.ele("manifest");
+    // add css and toc
+    let css_item = manifest.ele("item");
+    css_item.att("id", "css_style");
+    css_item.att("href", "css/style.css");
+    css_item.att("media-type", "text/css");
+    let navigation_item = manifest.ele("item");
+    navigation_item.att("id", "toc");
+    navigation_item.att("href", "navigation-documents.xhtml");
+    navigation_item.att("media-type", "application/xhtml+xml");
+    navigation_item.att("properties", "nav");
+    let ncx_item = manifest.ele("item");
+    ncx_item.att("id", "ncx");
+    ncx_item.att("href", "toc.ncx");
+    ncx_item.att("media-type", "application/x-dtbncx+xml");
+
     for (let file of epub.files) {
         let item = manifest.ele("item");
         // file path is image/i-001.jpg, id is i-001
@@ -339,7 +432,7 @@ async function create_standard_opf(epub) {
                     itemref.att("properties", "page-spread-right");
                     break;
                 case "center":
-                    itemref.att("properties", "page-spread-center");
+                    itemref.att("properties", "rendition:page-spread-center");
                     break;
                 default:
                     break;
@@ -348,5 +441,5 @@ async function create_standard_opf(epub) {
     }
 
     const file_path = epub.working_folder + "/item/standard.opf";
-    fs.writeFileSync(file_path, xml.end({ pretty: true }));
+    await fs.promises.writeFile(file_path, xml.end({ pretty: true }));
 }
