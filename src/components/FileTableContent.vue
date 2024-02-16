@@ -8,7 +8,7 @@
             hide-details
         ></v-checkbox>
     </td>
-    <td @click="dialog = true">
+    <td @click="dialog = true" class="cursor-pointer">
         <v-icon
             v-if="file.type.indexOf('image') != -1"
             :icon="mdiImageIcon"
@@ -55,7 +55,7 @@
     </td>
     <td>
         <v-select
-            label="表示形式"
+            :label="this.$t('displayStyle.label')"
             v-model="displayType"
             :items="styles"
             item-title="text"
@@ -88,18 +88,19 @@ export default {
             mdiImageIcon: mdiImage,
             mdiFileIcon: mdiFile,
             displayType: "right",
+            displayStyle: this.$t("displayStyle.title"),
             styles: [
                 {
                     value: "right",
-                    text: "page-spread-right",
+                    text: this.$t("displayStyle.options.right"),
                 },
                 {
                     value: "left",
-                    text: "page-spred-left",
+                    text: this.$t("displayStyle.options.left"),
                 },
                 {
                     value: "center",
-                    text: "page-spread-center",
+                    text: this.$t("displayStyle.options.center"),
                 },
             ],
         };

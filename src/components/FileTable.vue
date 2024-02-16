@@ -1,5 +1,5 @@
 <template>
-    <v-table>
+    <v-table height="300px">
         <thead>
             <tr>
                 <th>Cover</th>
