@@ -1,0 +1,21 @@
+{
+    "HelloWorld": "こんにちは世界",
+    "displayStyle": {
+        "label": "表示スタイル",
+        "options": {
+            "right": "右側",
+            "left": "左側",
+            "center": "中央"
+        }
+    },
+    "displayStyles": {
+        "label": "一括表示形式の設定",
+        "options": {
+            "right-left": "右と左を順番に表示",
+            "left-right": "左と右を順番に表示",
+            "center": "全て中央に表示",
+            "center-right-left": "最初の1枚を中央に、それ以降を右、左の順に表示",
+            "center-left-right": "最初の1枚を中央に、それ以降を左、右の順に表示"
+        }
+    }
+}
