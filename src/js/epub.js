@@ -99,8 +99,10 @@ export class Description {
      * @description add description to metadata_xml
      */
     xml(metadata_xml) {
-        if (this.description.length > 0)
+        if (this.description.length > 0) {
+            metadata_xml.com("作品説明");
             metadata_xml.ele("dc:description", this.description);
+        }
         return metadata_xml;
     }
 }
@@ -141,6 +143,7 @@ export class Metadata {
      * @description add metadata to metadata_xml
      */
     xml(metadata_xml) {
+        metadata_xml.com("メタデータ");
         let identifier = metadata_xml.ele("dc:identifier", this.id);
         identifier.att("id", "unique-id");
         metadata_xml.ele("dc:type", this.type);
@@ -151,6 +154,18 @@ export class Metadata {
         let booktype = metadata_xml.ele("meta");
         booktype.att("content", this.type);
         booktype.att("name", "book-type");
+        let fixed_layout = metadata_xml.ele("meta");
+        fixed_layout.att("name", "fixed-layout");
+        fixed_layout.att("content", "true");
+        let orientation = metadata_xml.ele("meta");
+        orientation.att("name", "orientation-lock");
+        orientation.att("content", "none");
+        let page_prog_dir = metadata_xml.ele("meta");
+        page_prog_dir.att("name", "primary-writing-mode");
+        page_prog_dir.att("content", "horizontal-rl");
+        let rendition_layout = metadata_xml.ele("meta", "pre-paginated");
+        rendition_layout.att("property", "rendition:layout");
+
         return metadata_xml;
     }
 }
