@@ -11,12 +11,7 @@
             </tr>
         </thead>
 
-        <!-- <draggable
-            v-model="epub.files"
-            tag="tbody"
-            item-key="index"
-            @end="onDragEnd"
-        >
+        <draggable v-model="epub.files" tag="tbody" item-key="index">
             <template #item="{ element }">
                 <tr>
                     <FileTableContent
@@ -28,8 +23,8 @@
                     />
                 </tr>
             </template>
-        </draggable> -->
-        <tbody>
+        </draggable>
+        <!-- <tbody>
             <tr v-for="(file, index) in epub.files" :key="index">
                 <FileTableContent
                     :file="file"
@@ -39,13 +34,13 @@
                     ref="fileTableContent"
                 />
             </tr>
-        </tbody>
+        </tbody> -->
     </v-table>
 </template>
 
 <script>
 import FileTableContent from "./FileTableContent.vue";
-// import draggable from "vuedraggable";
+import draggable from "vuedraggable";
 import { mdiTrashCan } from "@mdi/js";
 import { useEpubStore } from "@/stores/epub_store";
 
@@ -53,7 +48,7 @@ export default {
     name: "FileTable",
     components: {
         FileTableContent,
-        // draggable,
+        draggable,
     },
     created() {
         this.epub = useEpubStore().epub;

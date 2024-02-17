@@ -1,5 +1,6 @@
 {
     "importFolderLabel": "フォルダを選択",
+    "cover": "表紙",
     "displayStyle": {
         "label": "表示スタイル",
         "options": {
@@ -30,5 +31,9 @@
         "size": "サイズ",
         "filetype": "ファイルタイプ",
         "displayStyle": "表示スタイル"
+    },
+    "tablesTable": {
+        "title": "目次名",
+        "source": "ファイル名"
     }
 }

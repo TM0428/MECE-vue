@@ -234,7 +234,7 @@ export class Epub {
         this.description = new Description();
         this.metadata = new Metadata();
         this.files = [];
-        this.table = [];
+        this.tables = [];
         this.create_folder = "./sample";
         this.file_name = "sample.epub";
     }
