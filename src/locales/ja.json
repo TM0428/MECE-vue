@@ -17,5 +17,18 @@
             "center-right-left": "最初の1枚を中央に、それ以降を右、左の順に表示",
             "center-left-right": "最初の1枚を中央に、それ以降を左、右の順に表示"
         }
+    },
+    "deleteFile": {
+        "title": "ファイルを削除",
+        "message": "本当にファイルを削除しますか？",
+        "cancel": "キャンセル",
+        "delete": "削除"
+    },
+    "filesTable": {
+        "cover": "表紙",
+        "name": "ファイル名",
+        "size": "サイズ",
+        "filetype": "ファイルタイプ",
+        "displayStyle": "表示スタイル"
     }
 }

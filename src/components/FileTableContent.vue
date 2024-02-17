@@ -50,21 +50,9 @@
     </td>
     <td>{{ file.type }}</td>
     <td>
-        <v-icon
-            :icon="mdiArrowUpIcon"
-            class="cursor-pointer"
-            @click="changeFileIndex(1)"
-        ></v-icon>
-        <v-icon
-            :icon="mdiArrowDownIcon"
-            class="cursor-pointer"
-            @click="changeFileIndex(-1)"
-        ></v-icon>
-    </td>
-    <td>
         <v-select
             :label="this.$t('displayStyle.label')"
-            v-model="displayType"
+            v-model="pageStyle"
             :items="styles"
             item-title="text"
             item-value="value"
@@ -74,29 +62,56 @@
             class="my-2"
         ></v-select>
     </td>
+    <td>
+        <v-icon
+            :icon="mdiTrashCanIcon"
+            class="cursor-pointer"
+            @click="deleteDialog = true"
+        ></v-icon>
+        <v-dialog v-model="deleteDialog" max-width="500px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">
+                        {{ this.$t("deleteFile.title") }}
+                    </span>
+                </v-card-title>
+                <v-card-text>
+                    <p>{{ this.$t("deleteFile.message") }}</p>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn color="primary" @click="deleteDialog = false">
+                        {{ this.$t("deleteFile.cancel") }}
+                    </v-btn>
+                    <v-btn color="error" @click="deleteFile(file.id)">
+                        {{ this.$t("deleteFile.delete") }}
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </td>
 </template>
 
 <script>
 // import { ContentFile } from "@/js/epub";
-import { useEpubStore } from "@/stores/epub_store";
-import { mdiArrowUp, mdiArrowDown, mdiImage, mdiFile } from "@mdi/js";
+// import { useEpubStore } from "@/stores/epub_store";
+import { mdiTrashCan, mdiImage, mdiFile } from "@mdi/js";
 
 export default {
     name: "FileTableContent",
     props: {
-        file_index: Number,
+        file: Object,
     },
+    emits: ["update:pageStyle", "update:coverCheck", "delete:file"],
     data() {
         return {
             dialog: false,
+            deleteDialog: false,
             coverCheck: false,
             content_text: "",
-            mdiArrowUpIcon: mdiArrowUp,
-            mdiArrowDownIcon: mdiArrowDown,
+            mdiTrashCanIcon: mdiTrashCan,
             mdiImageIcon: mdiImage,
             mdiFileIcon: mdiFile,
-            displayType: "right",
-            displayStyle: this.$t("displayStyle.label"),
+            pageStyle: "right",
             styles: [
                 {
                     value: "right",
@@ -114,10 +129,9 @@ export default {
         };
     },
     created() {
-        this.epub_store = useEpubStore();
-        this.epub = this.epub_store.epub;
-        this.file = this.epub.files[this.file_index];
-        console.log(this.file);
+        // this.epub_store = useEpubStore();
+        // this.epub = this.epub_store.epub;
+        // this.file = this.epub.files[this.file_index];
         // if file type is not image, show content_text
         if (this.file.type.indexOf("image") == -1) {
             this.content_text = this.file.text;
@@ -127,7 +141,7 @@ export default {
             };
             reader.readAsText(this.file.content);
         }
-        this.displayType = this.file.page_style;
+        this.pageStyle = this.file.page_style;
     },
     methods: {
         formatSizeUnits(bytes) {
@@ -146,42 +160,48 @@ export default {
             }
             return bytes;
         },
+        coverDisabled() {
+            if (this.file.type.indexOf("image") == -1) {
+                return true;
+            }
+        },
         createObjectURL(file) {
             return URL.createObjectURL(file);
         },
         changeDisplayStyle() {
-            console.log(this.displayType);
-            this.file.page_style = this.displayType;
+            console.log(this.pageStyle);
+            this.$emit("update:pageStyle", this.file.id, this.pageStyle);
+            // this.file.page_style = this.pageStyle;
         },
         changeCover() {
             console.log(this.coverCheck);
-            this.file.cover = this.coverCheck;
+            this.$emit("update:coverCheck", this.file.id, this.coverCheck);
+            // this.file.cover = this.coverCheck;
         },
-        changeFileIndex(count) {
-            // change file index
-            let tmp = this.file;
-            this.epub.files[this.file_index] =
-                this.epub.files[this.file_index + count];
-            this.epub.files[this.file_index + count] = tmp;
-            // this.epub.changeFileIndex(this.file_index, count);
+        deleteFile(id) {
+            this.$emit("delete:file", id);
+        },
+        reload() {
+            this.pageStyle = this.file.page_style;
         },
     },
     // if change file, update content_text
     watch: {
-        file: function (new_file) {
-            if (this.file.type.indexOf("image") == -1) {
-                this.content_text = this.file.text;
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.content_text = e.target.result;
-                };
-                reader.readAsText(this.file.content);
-            }
-            this.displayType = new_file.page_style;
-            console.log(this.displayType);
-        },
-        file_index: function (new_index) {
-            this.file = this.epub.files[new_index];
+        file: {
+            handler: function (new_file) {
+                console.log("kitayo");
+                if (new_file.type.indexOf("image") == -1) {
+                    this.content_text = new_file.text;
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.content_text = e.target.result;
+                    };
+                    reader.readAsText(new_file.content);
+                }
+                this.pageStyle = new_file.page_style;
+                console.log(this.pageStyle);
+            },
+            deep: true,
         },
     },
 };

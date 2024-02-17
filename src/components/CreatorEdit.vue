@@ -11,7 +11,6 @@
                         v-model="creator.name"
                         label="Creator Name"
                         required
-                        @change="test"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6">

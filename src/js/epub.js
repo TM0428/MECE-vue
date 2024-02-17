@@ -170,6 +170,62 @@ export class Metadata {
     }
 }
 
+export class TableContent {
+    constructor(
+        title = "title",
+        href = "xhtml/p-cover.xhtml",
+        id = "xhtml-p-cover"
+    ) {
+        this.title = title;
+        this.href = href;
+        this.children = [];
+        this.id = id;
+    }
+    /**
+     * @param {xmlbuilder} nav_xml
+     * @return {xmlbuilder} nav_xml
+     * @description add table of content to toc_ncx
+     */
+    ncx(nav_xml, playOrder = 1) {
+        let nav_point = nav_xml.ele("navPoint");
+        nav_point.att("id", this.id);
+        nav_point.att("playOrder", playOrder);
+        nav_point.ele("navLabel").ele("text", this.title);
+        nav_point.ele("content").att("src", this.href);
+        for (let child of this.children) {
+            child.xml(nav_point);
+        }
+        return nav_xml;
+    }
+
+    /**
+     * @param {xmlbuilder} nav_xml
+     * @return {xmlbuilder} nav_xml
+     * @description add table of content to nav_xml
+     */
+    xml(nav_xml) {
+        let nav_point = nav_xml.ele("li");
+        let a = nav_point.ele("a", this.title);
+        a.att("href", this.href);
+        if (this.children.length > 0) {
+            let ol = nav_point.ele("ol");
+            for (let child of this.children) {
+                child.xml(ol);
+            }
+            return nav_xml;
+        }
+    }
+}
+
+export class ExtendedFile extends File {
+    constructor(file, id = "id", media_type = "", page_style = "") {
+        super(file);
+        this.id = id;
+        this.media_type = media_type;
+        this.page_style = page_style;
+    }
+}
+
 export class Epub {
     constructor() {
         this.title = new Title("", "", "title");
@@ -178,6 +234,7 @@ export class Epub {
         this.description = new Description();
         this.metadata = new Metadata();
         this.files = [];
+        this.table = [];
         this.create_folder = "./sample";
         this.file_name = "sample.epub";
     }
