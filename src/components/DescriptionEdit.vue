@@ -6,23 +6,15 @@
 </template>
 
 <script>
-import { Description } from "../js/epub.js";
+import { useEpubStore } from "@/stores/epub_store";
 
 export default {
     name: "DescriptionEdit",
-    props: {
-        description_prop: {
-            type: Description,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            description: this.description_prop,
-        };
-    },
     created() {
         console.log("DescriptionEdit created");
+        this.epub_store = useEpubStore();
+        this.epub = this.epub_store.epub;
+        this.description = this.epub.description;
         console.log(this.description);
     },
     methods: {

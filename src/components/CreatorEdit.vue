@@ -11,7 +11,6 @@
                         v-model="creator.name"
                         label="Creator Name"
                         required
-                        @change="test"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6">
@@ -29,7 +28,6 @@
                         item-value="role"
                         label="Creator Role"
                         required
-                        @update:model-value="setRole"
                     ></v-select>
                 </v-col>
                 <v-col cols="12" md="6">
@@ -55,14 +53,14 @@
 </template>
 
 <script>
-import { Creator } from "../js/epub.js";
 import { ROLES } from "../js/statics.js";
+import { useEpubStore } from "@/stores/epub_store";
 
 export default {
     name: "CreatorEdit",
     props: {
-        creator_prop: {
-            type: Creator,
+        id: {
+            type: String,
             required: true,
         },
     },
@@ -72,17 +70,17 @@ export default {
             role: ROLES,
         };
     },
-    mounted() {
-        // console.log(Creator);
+    created() {
+        this.epub_store = useEpubStore();
+        this.epub = this.epub_store.epub;
+        for (let i = 0; i < this.epub.creators.length; i++) {
+            if (this.epub.creators[i].id == this.id) {
+                this.creator = this.epub.creators[i];
+                break;
+            }
+        }
+        console.log(this.creator);
     },
-    methods: {
-        // set role
-        setRole() {
-            console.log(this.creator);
-        },
-        test() {
-            console.log(this.creator);
-        },
-    },
+    methods: {},
 };
 </script>

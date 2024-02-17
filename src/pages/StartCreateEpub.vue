@@ -129,12 +129,15 @@ export default {
                     console.log(data);
                     // reset epub store
                     this.epub_store.reset();
-                    this.epub_store.title = new Title(
+                    this.epub_store.createInit();
+                    const epub = this.epub_store.epub;
+                    epub.title = new Title(
                         data[0].onix.DescriptiveDetail.TitleDetail.TitleElement
                             .TitleText.content || "",
                         data[0].onix.DescriptiveDetail.TitleDetail.TitleElement
                             .TitleText.collationkey || ""
                     );
+                    epub.creators = [];
                     for (
                         let i = 0;
                         i < data[0].onix.DescriptiveDetail.Contributor.length;
@@ -142,7 +145,7 @@ export default {
                     ) {
                         let id =
                             "creator" + (i + 1).toString().padStart(2, "0");
-                        this.epub_store.creators.push(
+                        epub.creators.push(
                             new Creator(
                                 data[0].onix.DescriptiveDetail.Contributor[i]
                                     .PersonName.content || "",
@@ -159,14 +162,14 @@ export default {
                             )
                         );
                     }
-
-                    this.epub_store.publishers.push(
+                    epub.publishers = [];
+                    epub.publishers.push(
                         new Publisher(data[0].summary.publisher || "", "")
                     );
-                    this.epub_store.description = new Description();
-                    this.epub_store.metadata = new Metadata();
+                    epub.description = new Description();
+                    epub.metadata = new Metadata();
 
-                    console.log(this.epub_store);
+                    console.log(epub);
                     this.$router.push({
                         name: "OpfFileEditor",
                     });

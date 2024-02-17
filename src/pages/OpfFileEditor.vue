@@ -19,23 +19,20 @@
         </div>
         <div class="contents-editor">
             <!-- epub.title is array and made contents -->
-            <div v-if="epub_store.title">
-                <TitleEdit :title_prop="epub_store.title" />
+            <div v-if="epub.title">
+                <TitleEdit :id="epub.title.id" />
             </div>
-            <div v-for="creator in epub_store.creators" :key="creator.id">
-                <CreatorEdit :creator_prop="creator" />
+            <div v-for="creator in epub.creators" :key="creator.id">
+                <CreatorEdit :id="creator.id" />
             </div>
-            <div v-if="epub_store.description">
-                <DescriptionEdit :description_prop="epub_store.description" />
+            <div v-if="epub.description">
+                <DescriptionEdit />
             </div>
-            <!-- <div v-if="epub_data.publisher">
-                <PublisherEdit :publisher_prop="epub_data.publisher" />
-            </div> -->
-            <div v-for="publisher in epub_store.publishers" :key="publisher.id">
-                <PublisherEdit :publisher_prop="publisher" />
+            <div v-for="publisher in epub.publishers" :key="publisher.id">
+                <PublisherEdit :id="publisher.id" />
             </div>
-            <div v-if="epub_store.metadata">
-                <MetadataEdit :metadata_prop="epub_store.metadata" />
+            <div v-if="epub.metadata">
+                <MetadataEdit />
             </div>
         </div>
         <div class="contents-selector">
@@ -43,24 +40,20 @@
             <v-btn color="primary" @click="createInit"> create metadata </v-btn>
             <!-- <v-btn color="primary" @click="createMetadata"> create title </v-btn> -->
             <v-btn color="primary" @click="debug"> debug </v-btn>
+            <router-link to="/step2">
+                <v-btn color="primary"> next </v-btn>
+            </router-link>
         </div>
     </v-app>
 </template>
 
 <script>
 import { STEPS } from "../js/statics.js";
-// import {
-//     Title,
-//     Creator,
-//     Publisher,
-//     Description,
-//     Metadata,
-// } from "../js/epub.js";
 import { useEpubStore } from "../stores/epub_store.js";
 
 // component imports
-import CreatorEdit from "../components/CreatorEdit.vue";
 import TitleEdit from "../components/TitleEdit.vue";
+import CreatorEdit from "../components/CreatorEdit.vue";
 import DescriptionEdit from "../components/DescriptionEdit.vue";
 import PublisherEdit from "../components/PublisherEdit.vue";
 import MetadataEdit from "../components/MetadataEdit.vue";
@@ -68,15 +61,11 @@ import MetadataEdit from "../components/MetadataEdit.vue";
 export default {
     name: "MetadataEditor",
     components: {
-        CreatorEdit,
         TitleEdit,
+        CreatorEdit,
         DescriptionEdit,
         MetadataEdit,
         PublisherEdit,
-    },
-    setup(props) {
-        console.log("MetadataEditor setup");
-        console.log(props);
     },
     data() {
         return {
@@ -87,7 +76,11 @@ export default {
             isbn: "",
         };
     },
-    mounted() {},
+    created() {
+        this.epub_store = useEpubStore();
+        this.epub = this.epub_store.epub;
+        console.log(this.epub);
+    },
     methods: {
         createMetadata(mode = "title") {
             mode = "title";

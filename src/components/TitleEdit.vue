@@ -33,23 +33,24 @@
 </template>
 
 <script>
-import { Title } from "../js/epub.js";
+import { useEpubStore } from "@/stores/epub_store";
 
 export default {
     name: "TitleEdit",
     props: {
-        title_prop: {
-            type: Title,
+        id: {
+            type: String,
             required: true,
         },
     },
-    data() {
-        return {
-            title: this.title_prop,
-        };
-    },
     created() {
         console.log("TitleEdit created");
+        this.epub_store = useEpubStore();
+        this.epub = this.epub_store.epub;
+        this.title = this.epub.title;
+        if (this.title.id != this.id) {
+            console.error("TitleEdit: id is not matched");
+        }
         console.log(this.title);
     },
     methods: {},
