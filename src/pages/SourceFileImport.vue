@@ -18,19 +18,22 @@
             <v-col cols="12">
                 <v-file-input
                     v-model="files"
-                    label="Select Source File"
+                    :label="$t('importFolderLabel')"
                     multiple
                     show-size
                     show-type
                     hide-details
                     @change="importFile"
                     webkitdirectory
+                    class="text-truncate"
                 ></v-file-input>
+            </v-col>
+            <v-col cols="12">
+                <FileTable :files="epub.files" />
             </v-col>
         </v-row>
         <!-- <v-btn color="primary" @click="importFile"> Import Source File </v-btn> -->
         <!-- <FileImportDialog v-model="dialog" /> -->
-        <FileTable :files="epub.files" />
     </div>
 </template>
 
@@ -80,7 +83,6 @@ export default {
     },
     methods: {
         importFile() {
-            console.log(this.files);
             // sort files by name
             this.files.sort((a, b) => {
                 return a.name.localeCompare(b.name);

@@ -50,8 +50,16 @@
     </td>
     <td>{{ file.type }}</td>
     <td>
-        <v-icon :icon="mdiArrowUpIcon"></v-icon>
-        <v-icon :icon="mdiArrowDownIcon"></v-icon>
+        <v-icon
+            :icon="mdiArrowUpIcon"
+            class="cursor-pointer"
+            @click="changeFileIndex(1)"
+        ></v-icon>
+        <v-icon
+            :icon="mdiArrowDownIcon"
+            class="cursor-pointer"
+            @click="changeFileIndex(-1)"
+        ></v-icon>
     </td>
     <td>
         <v-select
@@ -88,7 +96,7 @@ export default {
             mdiImageIcon: mdiImage,
             mdiFileIcon: mdiFile,
             displayType: "right",
-            displayStyle: this.$t("displayStyle.title"),
+            displayStyle: this.$t("displayStyle.label"),
             styles: [
                 {
                     value: "right",
@@ -148,6 +156,14 @@ export default {
         changeCover() {
             console.log(this.coverCheck);
             this.file.cover = this.coverCheck;
+        },
+        changeFileIndex(count) {
+            // change file index
+            let tmp = this.file;
+            this.epub.files[this.file_index] =
+                this.epub.files[this.file_index + count];
+            this.epub.files[this.file_index + count] = tmp;
+            // this.epub.changeFileIndex(this.file_index, count);
         },
     },
     // if change file, update content_text

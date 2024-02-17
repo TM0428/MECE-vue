@@ -1,5 +1,5 @@
 {
-    "HelloWorld": "こんにちは世界",
+    "importFolderLabel": "フォルダを選択",
     "displayStyle": {
         "label": "表示スタイル",
         "options": {
