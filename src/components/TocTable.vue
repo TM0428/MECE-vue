@@ -19,6 +19,12 @@
             </template>
         </draggable>
     </v-table>
+    <v-btn color="primary" @click="addToc">
+        {{ $t("tocTable.add") }}
+    </v-btn>
+    <v-dialog v-model="create_dialog" max-width="800px">
+        <TocEditor :toc="new_toc" />
+    </v-dialog>
 </template>
 
 <script>
@@ -26,16 +32,19 @@ import { useEpubStore } from "@/stores/epub_store";
 import draggable from "vuedraggable";
 import TocTableContent from "./TocTableContent.vue";
 import { TocContent } from "@/js/epub";
+import TocEditor from "./TocEditor.vue";
 
 export default {
     name: "TableOfContentTable",
     components: {
         draggable,
         TocTableContent,
+        TocEditor,
     },
     data() {
         return {
             epub: useEpubStore().epub,
+            create_dialog: false,
         };
     },
     created() {
@@ -49,6 +58,10 @@ export default {
         onDragEnd(event) {
             // useEpubStore().updateToc(event.newIndex, event.oldIndex);
             console.log(event);
+        },
+        addToc() {
+            this.new_toc = new TocContent("title", null, "id");
+            this.create_dialog = true;
         },
     },
 };
