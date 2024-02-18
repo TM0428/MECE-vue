@@ -32,8 +32,14 @@
         "filetype": "ファイルタイプ",
         "displayStyle": "表示スタイル"
     },
-    "tablesTable": {
+    "tocTable": {
         "title": "目次名",
         "source": "ファイル名"
+    },
+    "tocEditor": {
+        "title": "目次編集",
+        "save": "保存",
+        "source": "ファイル",
+        "cancel": "キャンセル"
     }
 }

@@ -170,14 +170,10 @@ export class Metadata {
     }
 }
 
-export class TableContent {
-    constructor(
-        title = "title",
-        href = "xhtml/p-cover.xhtml",
-        id = "xhtml-p-cover"
-    ) {
+export class TocContent {
+    constructor(title = "title", file, id = "xhtml-p-cover") {
         this.title = title;
-        this.href = href;
+        this.file = file;
         this.children = [];
         this.id = id;
     }
@@ -191,7 +187,7 @@ export class TableContent {
         nav_point.att("id", this.id);
         nav_point.att("playOrder", playOrder);
         nav_point.ele("navLabel").ele("text", this.title);
-        nav_point.ele("content").att("src", this.href);
+        nav_point.ele("content").att("src", this.file.href);
         for (let child of this.children) {
             child.xml(nav_point);
         }
@@ -206,7 +202,7 @@ export class TableContent {
     xml(nav_xml) {
         let nav_point = nav_xml.ele("li");
         let a = nav_point.ele("a", this.title);
-        a.att("href", this.href);
+        a.att("href", this.file.href);
         if (this.children.length > 0) {
             let ol = nav_point.ele("ol");
             for (let child of this.children) {

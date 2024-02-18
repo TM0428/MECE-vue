@@ -3,10 +3,10 @@
         {{ table.title }}
     </td>
     <td @click="dialog = true" class="cursor-pointer">
-        {{ table.source }}
+        {{ table.file.name }}
     </td>
     <div>
-        <v-dialog v-model="dialog" max-width="500px">
+        <v-dialog v-model="dialog" max-width="800px">
             <TocEditor :toc="table" />
         </v-dialog>
     </div>
@@ -14,6 +14,7 @@
 
 <script>
 import TocEditor from "./TocEditor.vue";
+import { TocContent } from "@/js/epub";
 
 export default {
     name: "TocTableContent",
@@ -21,7 +22,7 @@ export default {
         TocEditor,
     },
     props: {
-        table: Object,
+        table: TocContent,
     },
     data() {
         return {
