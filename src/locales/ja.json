@@ -1,6 +1,14 @@
 {
     "importFolderLabel": "フォルダを選択",
     "cover": "表紙",
+    "start": {
+        "title": "EPUBファイルを作成",
+        "description": "ファイルを選択してください。",
+        "create": "作成を開始",
+        "createWithIsbnTitle": "ISBNを指定してEPUBファイルを作成",
+        "descriptionWithIsbn": "ISBNを指定してEPUBファイルを作成します。",
+        "createWithIsbn": "ISBNを入力..."
+    },
     "displayStyle": {
         "label": "表示スタイル",
         "options": {
