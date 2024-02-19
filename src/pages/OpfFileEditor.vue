@@ -33,11 +33,11 @@ import { STEPS } from "../js/statics.js";
 import { useEpubStore } from "../stores/epub_store.js";
 
 // component imports
-import TitleEdit from "../components/TitleEdit.vue";
-import CreatorEdit from "../components/CreatorEdit.vue";
-import DescriptionEdit from "../components/DescriptionEdit.vue";
-import PublisherEdit from "../components/PublisherEdit.vue";
-import MetadataEdit from "../components/MetadataEdit.vue";
+import TitleEdit from "../components/OpfEditor/TitleEdit.vue";
+import CreatorEdit from "../components/OpfEditor/CreatorEdit.vue";
+import DescriptionEdit from "../components/OpfEditor/DescriptionEdit.vue";
+import PublisherEdit from "../components/OpfEditor/PublisherEdit.vue";
+import MetadataEdit from "../components/OpfEditor/MetadataEdit.vue";
 import EpubMakeStepper from "../components/EpubMakeStepper.vue";
 
 export default {

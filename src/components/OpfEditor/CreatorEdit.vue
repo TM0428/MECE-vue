@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { ROLES } from "../js/statics.js";
+import { ROLES } from "@/js/statics.js";
 import { useEpubStore } from "@/stores/epub_store";
 
 export default {
