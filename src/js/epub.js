@@ -122,7 +122,7 @@ export class Metadata {
             this.id = id;
         }
         this.type = type;
-        this.modified = modified;
+        this.modified = new Date(modified);
         this.page_progression_direction = page_progression_direction;
     }
     create_id() {
@@ -137,6 +137,24 @@ export class Metadata {
         );
         this.id = "urn:uuid:" + uuid;
     }
+
+    getDate() {
+        const year = this.modified.getFullYear();
+        const month = (this.modified.getMonth() + 1)
+            .toString()
+            .padStart(2, "0");
+        const day = this.modified.getDate().toString().padStart(2, "0");
+        return year + "-" + month + "-" + day;
+    }
+    getIsoDate() {
+        const year = this.modified.getFullYear();
+        const month = (this.modified.getMonth() + 1)
+            .toString()
+            .padStart(2, "0");
+        const day = this.modified.getDate().toString().padStart(2, "0");
+        return year + "-" + month + "-" + day + "T00:00:00Z";
+    }
+
     /**
      * @param {xmlbuilder} metadata_xml
      * @return {xmlbuilder} metadata_xml
@@ -149,7 +167,8 @@ export class Metadata {
         metadata_xml.ele("dc:type", this.type);
         metadata_xml.ele("dc:language", this.language);
         // meta
-        let modified = metadata_xml.ele("meta", this.modified + ":00Z");
+        const modified_str = this.getIsoDate();
+        let modified = metadata_xml.ele("meta", modified_str);
         modified.att("property", "dcterms:modified");
         let booktype = metadata_xml.ele("meta");
         booktype.att("content", this.type);
@@ -225,7 +244,7 @@ export class ExtendedFile extends File {
 export class Epub {
     constructor() {
         this.title = new Title("", "", "title");
-        this.creators = [new Creator("", "", "creator01", 0)];
+        this.creators = [new Creator("", "", "aut", 1, "creator01")];
         this.publishers = [new Publisher("", "", "publisher")];
         this.description = new Description();
         this.metadata = new Metadata();
@@ -249,21 +268,14 @@ export class Epub {
     }
     create_creator() {
         if (this.creators.length == 0) {
-            this.creators = [new Creator("", "", "aut", 1, "creator01", 0)];
+            this.creators = [new Creator("", "", "aut", 1, "creator01")];
         } else {
             // id is creator01, creator02, ...
             let id =
                 "creator" +
                 (this.creators.length + 1).toString().padStart(2, "0");
             this.creators.push(
-                new Creator(
-                    "",
-                    "",
-                    "aut",
-                    this.creators.length + 1,
-                    id,
-                    this.creators.length
-                )
+                new Creator("", "", "aut", this.creators.length + 1, id)
             );
         }
     }
@@ -273,7 +285,7 @@ export function sample_epub() {
     let epub = new Epub();
     epub.title = new Title("title_desu", "title_yomi", "title");
     epub.creators = [
-        new Creator("name_desu", "name_yomi", "aut", 1, "creator01", 0),
+        new Creator("name_desu", "name_yomi", "aut", 1, "creator01"),
     ];
     epub.publishers = [new Publisher("publisher_desu", "publisher_yomi")];
     epub.description = new Description("description_desu");

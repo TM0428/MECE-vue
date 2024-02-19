@@ -71,15 +71,10 @@ export default {
         return {
             message: "Metadata Editor",
             steps: STEPS,
-            epub_store: useEpubStore(),
+            epub: useEpubStore().epub,
             start_overlay: true,
             isbn: "",
         };
-    },
-    created() {
-        this.epub_store = useEpubStore();
-        this.epub = this.epub_store.epub;
-        console.log(this.epub);
     },
     methods: {
         createMetadata(mode = "title") {

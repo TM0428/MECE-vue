@@ -3,26 +3,29 @@
         <!-- Creator metadata form
             required fields: title, title-yomi, id(not editable)
             -->
-        <div class="text-h3 ma-1">Title</div>
+        <div class="text-h3 ma-2">{{ $t("epubMetadata.title.label") }}</div>
         <v-form class="ma-3">
             <v-row>
-                <v-col cols="12" md="6">
+                <v-col cols="6" md="6" ms="12">
                     <v-text-field
                         v-model="title.title"
-                        label="Title Name"
+                        :label="$t('epubMetadata.title.label')"
                         required
                     ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="6">
+                <v-col cols="6" md="6" ms="12">
                     <v-text-field
                         v-model="title.title_yomi"
-                        label="Title Name Yomi"
+                        :label="$t('epubMetadata.title.yomilabel')"
                     ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="6">
+                <v-col cols="6" md="6" ms="12">
                     <v-text-field
                         v-model="title.id"
-                        label="Title ID"
+                        :label="
+                            $t('epubMetadata.title.label') +
+                            $t('epubMetadata.id')
+                        "
                         readonly
                         disabled
                     ></v-text-field>
@@ -44,14 +47,11 @@ export default {
         },
     },
     created() {
-        console.log("TitleEdit created");
-        this.epub_store = useEpubStore();
-        this.epub = this.epub_store.epub;
+        this.epub = useEpubStore().epub;
         this.title = this.epub.title;
         if (this.title.id != this.id) {
             console.error("TitleEdit: id is not matched");
         }
-        console.log(this.title);
     },
     methods: {},
 };

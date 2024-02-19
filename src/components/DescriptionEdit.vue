@@ -1,6 +1,8 @@
 <template>
-    <v-sheet border rounded class="ma-3">
-        <div class="text-h3 ma-3">Description</div>
+    <v-sheet border rounded class="ma-2">
+        <div class="text-h3 ma-3">
+            {{ $t("epubMetadata.description.label") }}
+        </div>
         <v-textarea v-model="description.description" class="ma-2" />
     </v-sheet>
 </template>

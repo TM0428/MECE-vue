@@ -1,21 +1,42 @@
+import i18n from "@/i18n";
+
 export const STEPS = ["Metadata", "Data", "Table", "Excute"];
 
 export const ROLES = [
     {
-        name: "著者",
+        name: i18n.global.t("epubMetadata.creator.roleOptions.aut"),
         role: "aut",
     },
     {
-        name: "翻訳者",
+        name: i18n.global.t("epubMetadata.creator.roleOptions.trl"),
         role: "trl",
     },
     {
-        name: "編集者",
+        name: i18n.global.t("epubMetadata.creator.roleOptions.edt"),
         role: "edt",
     },
     {
-        name: "絵・イラスト",
+        name: i18n.global.t("epubMetadata.creator.roleOptions.ill"),
         role: "ill",
+    },
+    {
+        name: i18n.global.t("epubMetadata.creator.roleOptions.oth"),
+        role: "oth",
+    },
+];
+
+export const LANGUAGES = [
+    {
+        lang: "ja",
+        name: i18n.global.t("epubMetadata.anotherMetadata.languages.ja"),
+    },
+    {
+        lang: "en",
+        name: i18n.global.t("epubMetadata.anotherMetadata.languages.en"),
+    },
+    {
+        lang: "de",
+        name: i18n.global.t("epubMetadata.anotherMetadata.languages.de"),
     },
 ];
 

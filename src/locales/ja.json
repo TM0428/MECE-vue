@@ -3,11 +3,69 @@
     "cover": "表紙",
     "start": {
         "title": "EPUBファイルを作成",
-        "description": "ファイルを選択してください。",
+        "description": "1からEPUBファイルを作成します。",
         "create": "作成を開始",
         "createWithIsbnTitle": "ISBNを指定してEPUBファイルを作成",
         "descriptionWithIsbn": "ISBNを指定してEPUBファイルを作成します。",
         "createWithIsbn": "ISBNを入力..."
+    },
+    "epubMetadata": {
+        "id": "ID",
+        "title": {
+            "label": "タイトル",
+            "placeholder": "タイトル名",
+            "yomilabel": "タイトル名(よみ)"
+        },
+        "creator": {
+            "label": "著者",
+            "placeholder": "著者名",
+            "yomilabel": "著者名(よみ)",
+            "role": "著者の役割",
+            "roleOptions": {
+                "aut": "著者",
+                "ill": "イラストレーター",
+                "trl": "翻訳者",
+                "edt": "編集者",
+                "oth": "その他"
+            },
+            "sequence": "著者の順番",
+            "add": "著者を追加",
+            "delete": "削除"
+        },
+        "description": {
+            "label": "概要"
+        },
+        "publisher": {
+            "label": "出版社",
+            "placeholder": "出版社名",
+            "yomilabel": "出版社名(よみ)"
+        },
+        "anotherMetadata": {
+            "label": "その他のメタデータ",
+            "language": {
+                "label": "言語"
+            },
+            "languages": {
+                "ja": "日本語",
+                "en": "英語",
+                "de": "ドイツ語"
+            },
+            "type": {
+                "label": "書籍のタイプ"
+            },
+            "types": {
+                "novel": "小説",
+                "comic": "コミック",
+                "photo": "写真集",
+                "magazine": "雑誌",
+                "artbook": "画集",
+                "textbook": "教科書",
+                "other": "その他"
+            },
+            "date": {
+                "label": "発行日"
+            }
+        }
     },
     "displayStyle": {
         "label": "表示スタイル",

@@ -1,34 +1,28 @@
 <template>
     <v-app>
-        <!-- User can select two option.
-        1. Create new epub file
-        2. Create epub with ISBN code
-        this page show two option and user can select one of them -->
-        <v-container>
-            <v-row>
-                <v-col cols="12" md="6">
-                    <v-card>
+        <v-container class="fill-height">
+            <v-row style="height: 100%" align="center" justify="center">
+                <v-col cols="6" md="6" align-self="center">
+                    <v-card style="height: 300px" class="d-flex flex-column">
                         <v-card-title>
                             <span class="headline">{{
                                 $t("start.title")
                             }}</span>
                         </v-card-title>
                         <v-card-text>
-                            <p>
-                                You can create new epub file with this option.
-                                This option is for user who want to create epub
-                                file without ISBN code.
+                            <p class="text-body-1">
+                                {{ $t("start.description") }}
                             </p>
                         </v-card-text>
-                        <v-card-actions>
+                        <v-card-actions class="mt-auto">
                             <v-btn color="primary" @click="createEpubInit">
                                 {{ $t("start.create") }}
                             </v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-col>
-                <v-col cols="12" md="6">
-                    <v-card>
+                <v-col cols="6" md="6" align-self="center">
+                    <v-card style="height: 300px" class="d-flex flex-column">
                         <v-card-title>
                             <span class="headline">
                                 {{ $t("start.createWithIsbnTitle") }}
@@ -36,13 +30,11 @@
                         </v-card-title>
                         <v-card-text>
                             <p>
-                                You can create new epub file with this option.
-                                This option is for user who want to create epub
-                                file with ISBN code.
+                                {{ $t("start.descriptionWithIsbn") }}
                             </p>
                         </v-card-text>
                         <!-- make a dialog and isbn input field. -->
-                        <v-card-actions>
+                        <v-card-actions class="mt-auto">
                             <v-btn color="primary">
                                 {{ $t("start.createWithIsbn") }}
                                 <v-dialog
@@ -54,7 +46,11 @@
                                     <v-card>
                                         <v-card-title>
                                             <span class="headline">
-                                                Create epub file with ISBN code
+                                                {{
+                                                    $t(
+                                                        "start.createWithIsbnTitle"
+                                                    )
+                                                }}
                                             </span>
                                         </v-card-title>
                                         <v-card-text>

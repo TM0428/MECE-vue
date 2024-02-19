@@ -1,30 +1,34 @@
 <template>
     <v-sheet border rounded class="ma-2">
-        <div class="text-h3 ma-1">Another Metadata</div>
+        <div class="text-h3 ma-2">
+            {{ $t("epubMetadata.anotherMetadata.label") }}
+        </div>
         <!-- select language(ja,en,de), id(readonly,disable), type, modified -->
         <v-form class="ma-3">
             <v-row>
-                <v-col cols="12" md="6">
+                <v-col cols="6">
                     <v-select
-                        v-model="metadata.language"
+                        v-model="epub.metadata.language"
                         :items="lang"
                         item-title="name"
                         item-value="lang"
-                        label="Language"
+                        :label="
+                            $t('epubMetadata.anotherMetadata.language.label')
+                        "
                         required
                     ></v-select>
                 </v-col>
-                <v-col cols="12" md="6">
+                <v-col cols="6">
                     <v-text-field
-                        v-model="metadata.id"
+                        v-model="epub.metadata.id"
                         label="ID"
                         readonly
                         disabled
                     ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="6">
+                <v-col cols="6">
                     <v-select
-                        v-model="metadata.type"
+                        v-model="epub.metadata.type"
                         :items="types"
                         item-title="name"
                         item-value="type"
@@ -32,13 +36,25 @@
                         required
                     ></v-select>
                 </v-col>
-                <v-col cols="12" md="6">
+                <v-col cols="6">
                     <v-text-field
-                        v-model="metadata.modified"
+                        v-model="modified"
                         label="Modified"
                         required
-                        type="datetime-local"
+                        readonly
+                        type="date"
+                        @click="dp_dialog = true"
                     ></v-text-field>
+                    <v-dialog v-model="dp_dialog" style="width: 360px">
+                        <v-date-picker
+                            v-model="epub.metadata.modified"
+                            width="360"
+                            @update:modelValue="updateDate()"
+                            @click:save="dp_dialog = false"
+                            @click:cancel="dp_dialog = false"
+                        >
+                        </v-date-picker>
+                    </v-dialog>
                 </v-col>
             </v-row>
         </v-form>
@@ -47,16 +63,13 @@
 
 <script>
 import { useEpubStore } from "@/stores/epub_store";
+import { LANGUAGES } from "@/js/statics.js";
 
 export default {
     name: "AnotherMetadataEdit",
     data() {
         return {
-            lang: [
-                { lang: "ja", name: "Japanese" },
-                { lang: "en", name: "English" },
-                { lang: "de", name: "German" },
-            ],
+            lang: LANGUAGES,
             types: [
                 { type: "comic", name: "Comic" },
                 { type: "novel", name: "Novel" },
@@ -68,15 +81,23 @@ export default {
                 { type: "application", name: "Application" },
                 { type: "unknown", name: "Unknown" },
             ],
+            dp_dialog: false,
+            epub: useEpubStore().epub,
         };
     },
     created() {
-        console.log("AnotherMetadataEdit created");
-        this.epub_store = useEpubStore();
-        this.epub = this.epub_store.epub;
-        this.metadata = this.epub.metadata;
-        console.log(this.metadata);
+        this.epub = useEpubStore().epub;
+        this.modified = this.epub.metadata.getDate();
     },
-    methods: {},
+    methods: {
+        updateDate() {
+            this.modified = this.epub.metadata.getDate();
+        },
+    },
+    watch: {
+        // modified: function (val) {
+        //     this.epub.metadata.modified = new Date(val);
+        // },
+    },
 };
 </script>

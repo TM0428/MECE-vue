@@ -11,19 +11,7 @@ import { mdiAccount, mdiArrowDown, mdiArrowUp } from "@mdi/js";
 import router from "./router.js";
 // pinia
 import { createPinia } from "pinia";
-// i18n
-import { createI18n } from "vue-i18n";
-import ja from "./locales/ja.json";
-import en from "./locales/en.json";
-
-const i18n = createI18n({
-    locale: "ja",
-    fallbackLocale: "ja",
-    messages: {
-        ja,
-        en,
-    },
-});
+import i18n from "./i18n.js";
 
 const vuetify = createVuetify({
     components,
