@@ -13,7 +13,12 @@
         "create": "作成を開始",
         "createWithIsbnTitle": "ISBNを指定してEPUBファイルを作成",
         "descriptionWithIsbn": "ISBNを指定してEPUBファイルを作成します。",
-        "createWithIsbn": "ISBNを入力..."
+        "createWithIsbn": "ISBNを入力...",
+        "isbnCode": "ISBNコード",
+        "isbnCodeDescription": "https://api.openbd.jp/ から書籍情報を取得します。",
+        "isbnCodeError": "ISBNコードを入力してください。",
+        "import": "ISBNを指定して作成を開始",
+        "cancel": "キャンセル"
     },
     "epubMetadata": {
         "id": "ID",
@@ -68,8 +73,12 @@
                 "textbook": "教科書",
                 "other": "その他"
             },
-            "date": {
+            "modified": {
                 "label": "発行日"
+            },
+            "bound": {
+                "rtl": "右開き",
+                "ltr": "左開き"
             }
         }
     },

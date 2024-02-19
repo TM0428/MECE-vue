@@ -32,14 +32,16 @@
                         :items="types"
                         item-title="name"
                         item-value="type"
-                        label="Type"
+                        :label="$t('epubMetadata.anotherMetadata.type.label')"
                         required
                     ></v-select>
                 </v-col>
                 <v-col cols="6">
                     <v-text-field
                         v-model="modified"
-                        label="Modified"
+                        :label="
+                            $t('epubMetadata.anotherMetadata.modified.label')
+                        "
                         required
                         readonly
                         type="date"
@@ -63,24 +65,14 @@
 
 <script>
 import { useEpubStore } from "@/stores/epub_store";
-import { LANGUAGES } from "@/js/statics.js";
+import { LANGUAGES, TYPES } from "@/js/statics.js";
 
 export default {
     name: "AnotherMetadataEdit",
     data() {
         return {
             lang: LANGUAGES,
-            types: [
-                { type: "comic", name: "Comic" },
-                { type: "novel", name: "Novel" },
-                { type: "magazine", name: "Magazine" },
-                { type: "photo", name: "Photo" },
-                { type: "video", name: "Video" },
-                { type: "music", name: "Music" },
-                { type: "game", name: "Game" },
-                { type: "application", name: "Application" },
-                { type: "unknown", name: "Unknown" },
-            ],
+            types: TYPES,
             dp_dialog: false,
             epub: useEpubStore().epub,
         };
@@ -93,11 +85,6 @@ export default {
         updateDate() {
             this.modified = this.epub.metadata.getDate();
         },
-    },
-    watch: {
-        // modified: function (val) {
-        //     this.epub.metadata.modified = new Date(val);
-        // },
     },
 };
 </script>

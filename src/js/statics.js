@@ -45,6 +45,37 @@ export const LANGUAGES = [
     },
 ];
 
+export const TYPES = [
+    {
+        type: "novel",
+        name: i18n.global.t("epubMetadata.anotherMetadata.types.novel"),
+    },
+    {
+        type: "comic",
+        name: i18n.global.t("epubMetadata.anotherMetadata.types.comic"),
+    },
+    {
+        type: "photo",
+        name: i18n.global.t("epubMetadata.anotherMetadata.types.photo"),
+    },
+    {
+        type: "magazine",
+        name: i18n.global.t("epubMetadata.anotherMetadata.types.magazine"),
+    },
+    {
+        type: "artbook",
+        name: i18n.global.t("epubMetadata.anotherMetadata.types.artbook"),
+    },
+    {
+        type: "textbook",
+        name: i18n.global.t("epubMetadata.anotherMetadata.types.textbook"),
+    },
+    {
+        type: "other",
+        name: i18n.global.t("epubMetadata.anotherMetadata.types.other"),
+    },
+];
+
 export const STYLE_CSS = `@charset "UTF-8";
         
 body {

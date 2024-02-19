@@ -29,7 +29,7 @@
                             </span>
                         </v-card-title>
                         <v-card-text>
-                            <p>
+                            <p class="text-body-1">
                                 {{ $t("start.descriptionWithIsbn") }}
                             </p>
                         </v-card-text>
@@ -55,14 +55,15 @@
                                         </v-card-title>
                                         <v-card-text>
                                             <p>
-                                                You can create new epub file
-                                                with this option. This option is
-                                                for user who want to create epub
-                                                file with ISBN code.
+                                                {{
+                                                    $t(
+                                                        "start.isbnCodeDescription"
+                                                    )
+                                                }}
                                             </p>
                                             <v-text-field
                                                 v-model="isbn"
-                                                label="ISBN code"
+                                                :label="$t('start.isbnCode')"
                                                 required
                                             ></v-text-field>
                                         </v-card-text>
@@ -71,13 +72,13 @@
                                                 color="primary"
                                                 @click="isbn_dialog = false"
                                             >
-                                                Cancel
+                                                {{ $t("start.cancel") }}
                                             </v-btn>
                                             <v-btn
                                                 color="primary"
                                                 @click="dataImportFromOpenBD"
                                             >
-                                                Create epub file with ISBN code
+                                                {{ $t("start.import") }}
                                             </v-btn>
                                         </v-card-actions>
                                     </v-card>
