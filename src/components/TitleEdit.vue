@@ -3,7 +3,7 @@
         <!-- Creator metadata form
             required fields: title, title-yomi, id(not editable)
             -->
-        <div class="text-h3 ma-2">{{ $t("epubMetadata.title.label") }}</div>
+        <div class="text-h4 ma-2">{{ $t("epubMetadata.title.label") }}</div>
         <v-form class="ma-3">
             <v-row>
                 <v-col cols="6" md="6" ms="12">

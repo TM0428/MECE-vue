@@ -1,9 +1,9 @@
 <template>
     <v-sheet border rounded class="ma-2">
-        <div class="text-h3 ma-3">
+        <div class="text-h4 ma-3">
             {{ $t("epubMetadata.description.label") }}
         </div>
-        <v-textarea v-model="description.description" class="ma-2" />
+        <v-textarea v-model="description.description" class="ma-3" />
     </v-sheet>
 </template>
 
@@ -13,11 +13,8 @@ import { useEpubStore } from "@/stores/epub_store";
 export default {
     name: "DescriptionEdit",
     created() {
-        console.log("DescriptionEdit created");
-        this.epub_store = useEpubStore();
-        this.epub = this.epub_store.epub;
+        this.epub = useEpubStore().epub;
         this.description = this.epub.description;
-        console.log(this.description);
     },
     methods: {
         test() {

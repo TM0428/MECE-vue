@@ -1,6 +1,6 @@
 <template>
     <v-sheet border rounded class="ma-2">
-        <div class="text-h3 ma-3">{{ $t("epubMetadata.publisher.label") }}</div>
+        <div class="text-h4 ma-3">{{ $t("epubMetadata.publisher.label") }}</div>
         <!-- publisher name, yomi, id(readonly, disable) -->
         <v-form class="ma-3">
             <v-row>

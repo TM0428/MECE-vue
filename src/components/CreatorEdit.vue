@@ -3,7 +3,7 @@
         <!-- Creator metadata form
             required fields: name, name-yomi, role, seq, id(not editable)
             -->
-        <div class="text-h3 ma-2">{{ $t("epubMetadata.creator.label") }}</div>
+        <div class="text-h4 ma-2">{{ $t("epubMetadata.creator.label") }}</div>
         <v-form class="ma-3">
             <v-row>
                 <v-col cols="6" md="6">
@@ -81,7 +81,6 @@ export default {
                 break;
             }
         }
-        console.log(this.creator);
     },
     methods: {},
 };

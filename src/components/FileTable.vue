@@ -80,9 +80,9 @@ export default {
         },
         contentsReload() {
             if (this.$refs.fileTableContent) {
-                this.$refs.fileTableContent.forEach((element) => {
-                    element.reload();
-                });
+                // this.$refs.fileTableContent.forEach((element) => {
+                //     element.reload();
+                // });
             }
         },
     },

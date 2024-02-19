@@ -1,6 +1,11 @@
 import i18n from "@/i18n";
 
-export const STEPS = ["Metadata", "Data", "Table", "Excute"];
+export const STEPS = [
+    i18n.global.t("steps.step1"),
+    i18n.global.t("steps.step2"),
+    i18n.global.t("steps.step3"),
+    i18n.global.t("steps.step4"),
+];
 
 export const ROLES = [
     {

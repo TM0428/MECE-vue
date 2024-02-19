@@ -1,5 +1,6 @@
 <template>
     <div>
+        <EpubMakeStepper :step="1" />
         <v-row class="ma-1" align-content="center">
             <v-col align-self="center" cols="6">
                 {{ $t("displayStyles.label") }}
@@ -42,15 +43,15 @@
 </template>
 
 <script>
-// import FileImportDialog from "@/components/FileImportDialog.vue";
 import FileTable from "@/components/FileTable.vue";
+import EpubMakeStepper from "../components/EpubMakeStepper.vue";
 import { useEpubStore } from "@/stores/epub_store";
 
 export default {
     name: "SourceFileImport",
     components: {
-        // FileImportDialog,
         FileTable,
+        EpubMakeStepper,
     },
     data() {
         return {

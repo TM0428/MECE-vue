@@ -7,7 +7,11 @@
     </td>
     <div>
         <v-dialog v-model="dialog" max-width="800px">
-            <TocEditor :toc="table" />
+            <TocEditor
+                :toc="table"
+                @cancel:toc="dialog = false"
+                @update:toc="dialog = false"
+            />
         </v-dialog>
     </div>
 </template>

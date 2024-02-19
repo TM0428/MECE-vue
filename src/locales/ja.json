@@ -1,6 +1,12 @@
 {
     "importFolderLabel": "フォルダを選択",
     "cover": "表紙",
+    "steps": {
+        "step1": "メタデータ入力",
+        "step2": "ファイル選択",
+        "step3": "目次編集",
+        "step4": "EPUBファイル作成"
+    },
     "start": {
         "title": "EPUBファイルを作成",
         "description": "1からEPUBファイルを作成します。",

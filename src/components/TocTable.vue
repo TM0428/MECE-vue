@@ -1,5 +1,5 @@
 <template>
-    <v-table fixed-header>
+    <v-table fixed-header class="ma-2">
         <thead>
             <tr>
                 <th>{{ $t("tocTable.title") }}</th>

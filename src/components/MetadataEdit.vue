@@ -1,6 +1,6 @@
 <template>
     <v-sheet border rounded class="ma-2">
-        <div class="text-h3 ma-2">
+        <div class="text-h4 ma-2">
             {{ $t("epubMetadata.anotherMetadata.label") }}
         </div>
         <!-- select language(ja,en,de), id(readonly,disable), type, modified -->
