@@ -76,6 +76,17 @@ export const TYPES = [
     },
 ];
 
+export const PAGE_PROGRESSION = [
+    {
+        page: "rtl",
+        name: i18n.global.t("epubMetadata.anotherMetadata.pageProgression.rtl"),
+    },
+    {
+        page: "ltr",
+        name: i18n.global.t("epubMetadata.anotherMetadata.pageProgression.ltr"),
+    },
+];
+
 export const STYLE_CSS = `@charset "UTF-8";
         
 body {

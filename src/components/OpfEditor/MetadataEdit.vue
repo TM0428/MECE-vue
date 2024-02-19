@@ -58,6 +58,16 @@
                         </v-date-picker>
                     </v-dialog>
                 </v-col>
+                <v-col cols="6">
+                    <v-select
+                        v-model="epub.metadata.page_progression_direction"
+                        :items="page_progression"
+                        item-title="name"
+                        item-value="page"
+                        :label="$t('epubMetadata.anotherMetadata.type.label')"
+                        required
+                    ></v-select>
+                </v-col>
             </v-row>
         </v-form>
     </v-sheet>
@@ -65,7 +75,7 @@
 
 <script>
 import { useEpubStore } from "@/stores/epub_store";
-import { LANGUAGES, TYPES } from "@/js/statics.js";
+import { LANGUAGES, TYPES, PAGE_PROGRESSION } from "@/js/statics.js";
 
 export default {
     name: "AnotherMetadataEdit",
@@ -73,6 +83,7 @@ export default {
         return {
             lang: LANGUAGES,
             types: TYPES,
+            page_progression: PAGE_PROGRESSION,
             dp_dialog: false,
             epub: useEpubStore().epub,
         };

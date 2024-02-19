@@ -76,7 +76,7 @@
             "modified": {
                 "label": "発行日"
             },
-            "bound": {
+            "pageProgression": {
                 "rtl": "右開き",
                 "ltr": "左開き"
             }
