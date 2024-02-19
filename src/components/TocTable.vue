@@ -23,7 +23,11 @@
         {{ $t("tocTable.add") }}
     </v-btn>
     <v-dialog v-model="create_dialog" max-width="800px">
-        <TocEditor :toc="new_toc" />
+        <TocEditor
+            :toc="new_toc"
+            @update:toc="updateToc"
+            @cancel:toc="cancelToc"
+        />
     </v-dialog>
 </template>
 
@@ -51,7 +55,9 @@ export default {
         if (this.epub.tables.length === 0) {
             // 表紙の目次のみを追加
             const file = this.epub.files.find((file) => file.cover === true);
-            this.epub.tables.push(new TocContent(this.$t("cover"), file));
+            if (file) {
+                this.epub.tables.push(new TocContent(this.$t("cover"), file));
+            }
         }
     },
     methods: {
@@ -62,6 +68,13 @@ export default {
         addToc() {
             this.new_toc = new TocContent("title", null, "id");
             this.create_dialog = true;
+        },
+        updateToc(toc) {
+            this.epub.tables.push(toc);
+            this.create_dialog = false;
+        },
+        cancelToc() {
+            this.create_dialog = false;
         },
     },
 };

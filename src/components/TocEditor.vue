@@ -28,6 +28,10 @@
                         <v-dialog v-model="dialog" scrollable max-width="800px">
                             <FileSelect @update:file="updateSelectFile" />
                         </v-dialog>
+
+                        <v-alert type="error" dismissible v-if="error_dialog">
+                            {{ this.$t("tocEditor.noFileError") }}
+                        </v-alert>
                     </v-col>
                     <v-col v-if="toc_edit.file" cols="6">
                         <!-- 画像を表示 -->
@@ -72,6 +76,7 @@ export default {
         return {
             toc_edit: this.toc,
             dialog: false,
+            error_dialog: false,
             mdiFileIcon: mdiFile,
         };
     },
@@ -90,10 +95,15 @@ export default {
         updateSelectFile(file) {
             if (file) {
                 this.toc_edit.file = file;
+                this.error_dialog = false;
             }
             this.dialog = false;
         },
         saveToc() {
+            if (this.toc_edit.file === null) {
+                this.error_dialog = true;
+                return;
+            }
             this.$emit("update:toc", this.toc_edit);
         },
         cancelToc() {
