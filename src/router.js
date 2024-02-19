@@ -1,23 +1,29 @@
-import StartCreateEpub from './pages/StartCreateEpub.vue';
-import OpfFileEditor from './pages/OpfFileEditor.vue';
-import SourceFileImport from './pages/SourceFileImport.vue';
-import { createRouter, createWebHistory } from 'vue-router';
+import StartCreateEpub from "./pages/StartCreateEpub.vue";
+import OpfFileEditor from "./pages/OpfFileEditor.vue";
+import SourceFileImport from "./pages/SourceFileImport.vue";
+import TocEdit from "./pages/TocEdit.vue";
+import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
     {
-        path: '/',
-        name: 'StartCreateEpub',
+        path: "/",
+        name: "StartCreateEpub",
         component: StartCreateEpub,
     },
     {
-        path: '/step1',
-        name: 'OpfFileEditor',
+        path: "/step1",
+        name: "OpfFileEditor",
         component: OpfFileEditor,
     },
     {
-        path: '/step2',
-        name: 'SourceFileEditor',
+        path: "/step2",
+        name: "SourceFileEditor",
         component: SourceFileImport,
+    },
+    {
+        path: "/step3",
+        name: "TocEdit",
+        component: TocEdit,
     },
 ];
 

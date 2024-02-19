@@ -1,5 +1,14 @@
 {
     "importFolderLabel": "フォルダを選択",
+    "cover": "表紙",
+    "start": {
+        "title": "EPUBファイルを作成",
+        "description": "ファイルを選択してください。",
+        "create": "作成を開始",
+        "createWithIsbnTitle": "ISBNを指定してEPUBファイルを作成",
+        "descriptionWithIsbn": "ISBNを指定してEPUBファイルを作成します。",
+        "createWithIsbn": "ISBNを入力..."
+    },
     "displayStyle": {
         "label": "表示スタイル",
         "options": {
@@ -30,5 +39,19 @@
         "size": "サイズ",
         "filetype": "ファイルタイプ",
         "displayStyle": "表示スタイル"
+    },
+    "tocTable": {
+        "title": "目次名",
+        "source": "ファイル名",
+        "add": "追加"
+    },
+    "tocEditor": {
+        "title": "目次編集",
+        "save": "保存",
+        "source": "ファイル",
+        "cancel": "キャンセル",
+        "noFile": "ファイルを選択...",
+        "error": "エラー",
+        "noFileError": "ファイルを選択してください。"
     }
 }

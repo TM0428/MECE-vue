@@ -33,6 +33,9 @@
                 <FileTable ref="filetable" />
             </v-col>
         </v-row>
+        <router-link to="/step3">
+            <v-btn color="primary"> next </v-btn>
+        </router-link>
         <!-- <v-btn color="primary" @click="importFile"> Import Source File </v-btn> -->
         <!-- <FileImportDialog v-model="dialog" /> -->
     </div>

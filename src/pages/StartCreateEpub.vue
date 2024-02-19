@@ -9,7 +9,9 @@
                 <v-col cols="12" md="6">
                     <v-card>
                         <v-card-title>
-                            <span class="headline">Create new epub file</span>
+                            <span class="headline">{{
+                                $t("start.title")
+                            }}</span>
                         </v-card-title>
                         <v-card-text>
                             <p>
@@ -20,7 +22,7 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-btn color="primary" @click="createEpubInit">
-                                Create new epub file
+                                {{ $t("start.create") }}
                             </v-btn>
                         </v-card-actions>
                     </v-card>
@@ -29,7 +31,7 @@
                     <v-card>
                         <v-card-title>
                             <span class="headline">
-                                Create epub file with ISBN code
+                                {{ $t("start.createWithIsbnTitle") }}
                             </span>
                         </v-card-title>
                         <v-card-text>
@@ -42,7 +44,7 @@
                         <!-- make a dialog and isbn input field. -->
                         <v-card-actions>
                             <v-btn color="primary">
-                                Create epub file with ISBN code
+                                {{ $t("start.createWithIsbn") }}
                                 <v-dialog
                                     v-model="isbn_dialog"
                                     max-width="500px"
