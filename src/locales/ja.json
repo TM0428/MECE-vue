@@ -126,5 +126,19 @@
         "noFile": "ファイルを選択...",
         "error": "エラー",
         "noFileError": "ファイルを選択してください。"
-    }
+    },
+    "makeEpubForm": {
+        "title": "タイトル",
+        "creator": "著者",
+        "publisher": "出版社",
+        "description": "概要",
+        "makeEpub": "EPUBファイルを作成",
+        "confirm": "確認",
+        "confirmMessage": "このデータでEPUBファイルを作成しますか？",
+        "no": "キャンセル",
+        "yes": "作成"
+    },
+    "next": "次のステップ",
+    "back": "前のステップ",
+    "TocTitle": "目次"
 }

@@ -87,6 +87,29 @@ export const PAGE_PROGRESSION = [
     },
 ];
 
+export const PAGE_STYLE = [
+    {
+        value: "right-left",
+        text: i18n.global.t("displayStyles.options.right-left"),
+    },
+    {
+        value: "left-right",
+        text: i18n.global.t("displayStyles.options.left-right"),
+    },
+    {
+        value: "center",
+        text: i18n.global.t("displayStyles.options.center"),
+    },
+    {
+        value: "center-right-left",
+        text: i18n.global.t("displayStyles.options.center-right-left"),
+    },
+    {
+        value: "center-left-right",
+        text: i18n.global.t("displayStyles.options.center-left-right"),
+    },
+];
+
 export const STYLE_CSS = `@charset "UTF-8";
         
 body {
@@ -96,6 +119,7 @@ body {
     color: #000;
     font-size: 100%;
     font-family: sans-serif;
+    -webkit-writing-mode: horizontal-rl;
 }
 div.main {
     margin: 0;

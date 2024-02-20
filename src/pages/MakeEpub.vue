@@ -1,29 +1,29 @@
 <template>
     <v-app>
         <v-main>
-            <EpubMakeStepper :step="2" />
-            <TocTable />
+            <EpubMakeStepper :step="3" />
+            <MakeEpubForm />
             <EpubMakeRouter :back="back" :next="next" />
         </v-main>
     </v-app>
 </template>
 
 <script>
-import TocTable from "@/components/TocTable.vue";
 import EpubMakeStepper from "@/components/EpubMakeStepper.vue";
+import MakeEpubForm from "@/components/MakeEpubForm.vue";
 import EpubMakeRouter from "@/components/EpubMakeRouter.vue";
 
 export default {
-    name: "TocEdit",
+    name: "MakeEpub",
     components: {
-        TocTable,
+        MakeEpubForm,
         EpubMakeStepper,
         EpubMakeRouter,
     },
     data() {
         return {
-            back: "/step2",
-            next: "/step4",
+            back: "/step3",
+            next: "",
         };
     },
 };

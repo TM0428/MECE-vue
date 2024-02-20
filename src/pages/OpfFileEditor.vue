@@ -3,9 +3,7 @@
         <EpubMakeStepper :step="0" />
         <div class="contents-editor">
             <!-- epub.title is array and made contents -->
-            <div v-if="epub.title">
-                <TitleEdit :id="epub.title.id" />
-            </div>
+            <TitleEdit />
             <div v-for="creator in epub.creators" :key="creator.id">
                 <CreatorEdit :id="creator.id" />
             </div>
@@ -19,12 +17,7 @@
                 <MetadataEdit />
             </div>
         </div>
-        <div class="contents-selector">
-            <v-btn color="primary" @click="debug"> debug </v-btn>
-            <router-link to="/step2">
-                <v-btn color="primary"> next </v-btn>
-            </router-link>
-        </div>
+        <EpubMakeRouter :back="back" :next="next" />
     </v-app>
 </template>
 
@@ -38,7 +31,8 @@ import CreatorEdit from "../components/OpfEditor/CreatorEdit.vue";
 import DescriptionEdit from "../components/OpfEditor/DescriptionEdit.vue";
 import PublisherEdit from "../components/OpfEditor/PublisherEdit.vue";
 import MetadataEdit from "../components/OpfEditor/MetadataEdit.vue";
-import EpubMakeStepper from "../components/EpubMakeStepper.vue";
+import EpubMakeStepper from "@/components/EpubMakeStepper.vue";
+import EpubMakeRouter from "@/components/EpubMakeRouter.vue";
 
 export default {
     name: "MetadataEditor",
@@ -49,6 +43,7 @@ export default {
         MetadataEdit,
         PublisherEdit,
         EpubMakeStepper,
+        EpubMakeRouter,
     },
     data() {
         return {
@@ -56,13 +51,9 @@ export default {
             steps: STEPS,
             epub: useEpubStore().epub,
             start_overlay: true,
-            isbn: "",
+            back: "/",
+            next: "/step2",
         };
-    },
-    methods: {
-        debug() {
-            console.log(this.epub);
-        },
     },
 };
 </script>

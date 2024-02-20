@@ -227,8 +227,8 @@ export class TocContent {
             for (let child of this.children) {
                 child.xml(ol);
             }
-            return nav_xml;
         }
+        return nav_xml;
     }
 }
 
@@ -289,6 +289,74 @@ export function sample_epub() {
     ];
     epub.publishers = [new Publisher("publisher_desu", "publisher_yomi")];
     epub.description = new Description("description_desu");
+
+    return epub;
+}
+
+export async function create_epub_from_isbn(isbn) {
+    const url = `https://api.openbd.jp/v1/get?isbn=${isbn}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    const book = data[0];
+    console.log(book);
+    const epub = new Epub();
+    epub.title = new Title(
+        data[0].onix.DescriptiveDetail.TitleDetail.TitleElement.TitleText
+            .content || "",
+        data[0].onix.DescriptiveDetail.TitleDetail.TitleElement.TitleText
+            .collationkey || ""
+    );
+    epub.creators = [];
+    for (
+        let i = 0;
+        i < data[0].onix.DescriptiveDetail.Contributor.length;
+        i++
+    ) {
+        let id = "creator" + (i + 1).toString().padStart(2, "0");
+        epub.creators.push(
+            new Creator(
+                data[0].onix.DescriptiveDetail.Contributor[i].PersonName
+                    .content || "",
+                data[0].onix.DescriptiveDetail.Contributor[i].PersonName
+                    .collationkey || "",
+                "aut",
+                Number(
+                    data[0].onix.DescriptiveDetail.Contributor[i]
+                        .SequenceNumber || i + 1
+                ),
+                id,
+                i
+            )
+        );
+    }
+    epub.publishers = [];
+    for (let i = 0; i < data[0].onix.PublishingDetail.Publisher.length; i++) {
+        epub.publishers.push(
+            new Publisher(
+                data[0].onix.PublishingDetail.Publisher[i].PublisherName
+                    .content || "",
+                data[0].onix.PublishingDetail.Publisher[i].PublisherName
+                    .collationkey || "",
+                "publisher" + (i + 1).toString().padStart(2, "0")
+            )
+        );
+    }
+
+    let description = "";
+    for (let i = 0; i < data[0].onix.CollateralDetail.TextContent.length; i++) {
+        if (
+            data[0].onix.CollateralDetail.TextContent[i].ContentAudience ===
+            "00" /* Description */
+        ) {
+            description += data[0].onix.CollateralDetail.TextContent[i].Text;
+        }
+    }
+
+    epub.description = new Description(description);
+
+    if (book.hanmoto) {
+        epub.metadata.modified = new Date(book.hanmoto.datemodified);
+    }
 
     return epub;
 }

@@ -40,17 +40,11 @@ import { useEpubStore } from "@/stores/epub_store";
 
 export default {
     name: "TitleEdit",
-    props: {
-        id: {
-            type: String,
-            required: true,
-        },
-    },
     created() {
         this.epub = useEpubStore().epub;
         this.title = this.epub.title;
-        if (this.title.id != this.id) {
-            console.error("TitleEdit: id is not matched");
+        if (this.title == undefined) {
+            console.error("TitleEdit: title is undefined.");
         }
     },
     methods: {},

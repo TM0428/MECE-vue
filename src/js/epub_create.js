@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const builder = require("xmlbuilder");
 const JSZip = require("jszip");
+import i18n from "@/i18n";
 
 export async function create_epub(epub) {
     await create_folder(epub);
@@ -197,7 +198,7 @@ async function make_xhtml_from_image(epub, file, file_name) {
     const xhtml_file_name =
         "p-" + file_name.split("-")[1].split(".")[0] + ".xhtml";
     const xhtml_path = folder_path + "/" + xhtml_file_name;
-    file.xhtml_path = "xhtml/" + xhtml_file_name;
+    file.href = "xhtml/" + xhtml_file_name;
 
     let size = head.ele("meta");
     size.att("name", "viewport");
@@ -257,15 +258,12 @@ async function create_navigation_documents(epub) {
     nav.att("epub:type", "toc");
     nav.att("id", "toc");
     let h1 = nav.ele("h1");
-    h1.txt("Table of Contents");
+    h1.txt(i18n.global.t("TocTitle"));
     let ol = nav.ele("ol");
-    if (epub.table != undefined) {
-        for (let item of epub.table) {
-            let li = ol.ele("li");
-            let a = li.ele("a");
-            a.att("href", item.href);
-            a.txt(item.title);
-        }
+    if (epub.tables.length != 0) {
+        epub.tables.forEach((item) => {
+            ol = item.xml(ol);
+        });
     } else {
         // make only p-cover.xhtml
         let li = ol.ele("li");
@@ -322,17 +320,10 @@ async function create_toc_ncx(epub) {
     let text = docTitle.ele("text");
     text.txt(epub.title.title);
     let navMap = xml.ele("navMap");
-    if (epub.table != undefined) {
-        for (let item of epub.table) {
-            let navPoint = navMap.ele("navPoint");
-            navPoint.att("id", item.id);
-            navPoint.att("playOrder", item.playOrder);
-            let navLabel = navPoint.ele("navLabel");
-            let text = navLabel.ele("text");
-            text.txt(item.title);
-            let content = navPoint.ele("content");
-            content.att("src", item.href);
-        }
+    if (epub.tables.length != 0) {
+        epub.tables.forEach((item, index) => {
+            navMap = item.ncx(navMap, index + 1);
+        });
     } else {
         // make only p-cover.xhtml
         let navPoint = navMap.ele("navPoint");
@@ -400,9 +391,9 @@ async function create_standard_opf(epub) {
             item.att("properties", "cover-image");
         }
         // xhtml
-        if (file.xhtml_path != undefined) {
+        if (file.href != undefined) {
             let item = manifest.ele("item");
-            const xhtml_file_path = file.xhtml_path;
+            const xhtml_file_path = file.href;
             const xhtml_id = xhtml_file_path.split("/").pop().split(".")[0];
             item.att("id", xhtml_id);
             item.att("href", xhtml_file_path);
@@ -418,9 +409,9 @@ async function create_standard_opf(epub) {
         epub.metadata.page_progression_direction
     );
     for (let file of epub.files) {
-        if (file.xhtml_path != undefined) {
+        if (file.href != undefined) {
             let itemref = spine.ele("itemref");
-            const xhtml_file_path = file.xhtml_path;
+            const xhtml_file_path = file.href;
             const xhtml_id = xhtml_file_path.split("/").pop().split(".")[0];
             itemref.att("idref", xhtml_id);
             itemref.att("linear", "yes");

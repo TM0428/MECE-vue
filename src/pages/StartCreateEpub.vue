@@ -93,13 +93,7 @@
 </template>
 
 <script>
-import {
-    Title,
-    Creator,
-    Publisher,
-    Description,
-    Metadata,
-} from "../js/epub.js";
+import { create_epub_from_isbn } from "@/js/epub.js";
 import { useEpubStore } from "../stores/epub_store.js";
 
 export default {
@@ -112,67 +106,18 @@ export default {
         };
     },
     methods: {
-        dataImportFromOpenBD() {
+        async dataImportFromOpenBD() {
             // import data from openBD
             // request isbn code to openBD
             // url is https://api.openbd.jp/v1/get?isbn={isbn code}
             // response is json
             console.log(this.isbn);
-            const url = "https://api.openbd.jp/v1/get?isbn=" + this.isbn;
-            // request to openBD
-            fetch(url)
-                .then((response) => {
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log(data);
-                    // reset epub store
-                    this.epub_store.reset();
-                    this.epub_store.createInit();
-                    const epub = this.epub_store.epub;
-                    epub.title = new Title(
-                        data[0].onix.DescriptiveDetail.TitleDetail.TitleElement
-                            .TitleText.content || "",
-                        data[0].onix.DescriptiveDetail.TitleDetail.TitleElement
-                            .TitleText.collationkey || ""
-                    );
-                    epub.creators = [];
-                    for (
-                        let i = 0;
-                        i < data[0].onix.DescriptiveDetail.Contributor.length;
-                        i++
-                    ) {
-                        let id =
-                            "creator" + (i + 1).toString().padStart(2, "0");
-                        epub.creators.push(
-                            new Creator(
-                                data[0].onix.DescriptiveDetail.Contributor[i]
-                                    .PersonName.content || "",
-                                data[0].onix.DescriptiveDetail.Contributor[i]
-                                    .PersonName.collationkey || "",
-                                "aut",
-                                Number(
-                                    data[0].onix.DescriptiveDetail.Contributor[
-                                        i
-                                    ].SequenceNumber || i + 1
-                                ),
-                                id,
-                                i
-                            )
-                        );
-                    }
-                    epub.publishers = [];
-                    epub.publishers.push(
-                        new Publisher(data[0].summary.publisher || "", "")
-                    );
-                    epub.description = new Description();
-                    epub.metadata = new Metadata();
-
-                    console.log(epub);
-                    this.$router.push({
-                        name: "OpfFileEditor",
-                    });
-                });
+            const epub = await create_epub_from_isbn(this.isbn);
+            this.epub_store.epub = epub;
+            console.log(this.epub_store.epub);
+            this.$router.push({
+                name: "OpfFileEditor",
+            });
         },
         createEpubInit() {
             // make epub data and router push to OpfFileEditor

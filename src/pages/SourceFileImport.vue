@@ -34,24 +34,23 @@
                 <FileTable ref="filetable" />
             </v-col>
         </v-row>
-        <router-link to="/step3">
-            <v-btn color="primary"> next </v-btn>
-        </router-link>
-        <!-- <v-btn color="primary" @click="importFile"> Import Source File </v-btn> -->
-        <!-- <FileImportDialog v-model="dialog" /> -->
+        <EpubMakeRouter :back="back" :next="next" />
     </div>
 </template>
 
 <script>
-import FileTable from "@/components/FileTable.vue";
-import EpubMakeStepper from "../components/EpubMakeStepper.vue";
 import { useEpubStore } from "@/stores/epub_store";
+import { PAGE_STYLE } from "@/js/statics";
+import FileTable from "@/components/FileTable.vue";
+import EpubMakeStepper from "@/components/EpubMakeStepper.vue";
+import EpubMakeRouter from "@/components/EpubMakeRouter.vue";
 
 export default {
     name: "SourceFileImport",
     components: {
         FileTable,
         EpubMakeStepper,
+        EpubMakeRouter,
     },
     data() {
         return {
@@ -59,28 +58,9 @@ export default {
             files: [],
             displayType: "right-left",
             file_index: 0,
-            styles: [
-                {
-                    value: "right-left",
-                    text: this.$t("displayStyles.options.right-left"),
-                },
-                {
-                    value: "left-right",
-                    text: this.$t("displayStyles.options.left-right"),
-                },
-                {
-                    value: "center",
-                    text: this.$t("displayStyles.options.center"),
-                },
-                {
-                    value: "center-right-left",
-                    text: this.$t("displayStyles.options.center-right-left"),
-                },
-                {
-                    value: "center-left-right",
-                    text: this.$t("displayStyles.options.center-left-right"),
-                },
-            ],
+            styles: PAGE_STYLE,
+            back: "/step1",
+            next: "/step3",
         };
     },
     created() {
