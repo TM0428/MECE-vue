@@ -330,14 +330,11 @@ export async function create_epub_from_isbn(isbn) {
         );
     }
     epub.publishers = [];
-    for (let i = 0; i < data[0].onix.PublishingDetail.Publisher.length; i++) {
+    if (data[0].onix.PublishingDetail.Publisher.PublisherName != undefined) {
         epub.publishers.push(
             new Publisher(
-                data[0].onix.PublishingDetail.Publisher[i].PublisherName
-                    .content || "",
-                data[0].onix.PublishingDetail.Publisher[i].PublisherName
-                    .collationkey || "",
-                "publisher" + (i + 1).toString().padStart(2, "0")
+                data[0].onix.PublishingDetail.Publisher.PublisherName || "",
+                ""
             )
         );
     }

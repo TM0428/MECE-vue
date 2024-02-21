@@ -22,6 +22,8 @@
     },
     "epubMetadata": {
         "id": "ID",
+        "delete": "削除",
+        "cancel": "キャンセル",
         "title": {
             "label": "タイトル",
             "placeholder": "タイトル名",
@@ -41,7 +43,7 @@
             },
             "sequence": "著者の順番",
             "add": "著者を追加",
-            "delete": "削除"
+            "deleteConfirm": "本当に著者を削除しますか？"
         },
         "description": {
             "label": "概要"

@@ -11,7 +11,7 @@
             </tr>
         </thead>
 
-        <draggable v-model="epub.files" tag="tbody" item-key="index">
+        <draggable v-model="files" tag="tbody" item-key="index">
             <template #item="{ element }">
                 <tr>
                     <FileTableContent
@@ -24,17 +24,6 @@
                 </tr>
             </template>
         </draggable>
-        <!-- <tbody>
-            <tr v-for="(file, index) in epub.files" :key="index">
-                <FileTableContent
-                    :file="file"
-                    @update:pageStyle="changePageStyle"
-                    @update:coverCheck="changeCoverCheck"
-                    @delete:file="deleteFile"
-                    ref="fileTableContent"
-                />
-            </tr>
-        </tbody> -->
     </v-table>
 </template>
 
@@ -86,18 +75,9 @@ export default {
             }
         },
     },
-    watch: {
-        epub: {
-            handler() {
-                console.log("epub changed");
-            },
-            deep: true,
-        },
-        "useEpubStore().epub": {
-            handler() {
-                console.log("epub.files changed");
-            },
-            deep: true,
+    computed: {
+        files() {
+            return useEpubStore().epub.files;
         },
     },
 };

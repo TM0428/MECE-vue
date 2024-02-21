@@ -93,7 +93,7 @@
 
 <script>
 // import { ContentFile } from "@/js/epub";
-// import { useEpubStore } from "@/stores/epub_store";
+import { useEpubStore } from "@/stores/epub_store";
 import { mdiTrashCan, mdiImage, mdiFile } from "@mdi/js";
 
 export default {
@@ -191,11 +191,24 @@ export default {
     },
     // if change file, update content_text
     watch: {
-        file: {
+        file_c: {
             handler: function () {
                 this.init();
             },
             deep: true,
+        },
+        "props.file": {
+            handler: function () {
+                this.init();
+            },
+            deep: true,
+        },
+    },
+    computed: {
+        file_c() {
+            return useEpubStore().epub.files.find(
+                (file) => file.id === this.file.id
+            );
         },
     },
 };
