@@ -6,9 +6,11 @@
         <div v-for="(creator, index) in creators" :key="index">
             <CreatorEdit :id="creator.id" />
         </div>
-        <v-btn color="primary" @click="addCreator" class="ma-2" block>
-            {{ $t("epubMetadata.creator.add") }}
-        </v-btn>
+        <div class="ma-2">
+            <v-btn color="primary" @click="addCreator" block>
+                {{ $t("epubMetadata.creator.add") }}
+            </v-btn>
+        </div>
     </v-sheet>
 </template>
 
