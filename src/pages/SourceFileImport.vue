@@ -66,6 +66,7 @@ export default {
     created() {
         this.epub_store = useEpubStore();
         this.epub = this.epub_store.epub;
+        this.file_index = this.epub.files.length;
     },
     methods: {
         importFile() {
