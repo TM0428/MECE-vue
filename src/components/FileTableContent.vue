@@ -93,7 +93,7 @@
 
 <script>
 // import { ContentFile } from "@/js/epub";
-// import { useEpubStore } from "@/stores/epub_store";
+import { useEpubStore } from "@/stores/epub_store";
 import { mdiTrashCan, mdiImage, mdiFile } from "@mdi/js";
 
 export default {
@@ -133,17 +133,21 @@ export default {
         // this.epub = this.epub_store.epub;
         // this.file = this.epub.files[this.file_index];
         // if file type is not image, show content_text
-        if (this.file.type.indexOf("image") == -1) {
-            this.content_text = this.file.text;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                this.content_text = e.target.result;
-            };
-            reader.readAsText(this.file.content);
-        }
-        this.pageStyle = this.file.page_style;
+        this.init();
     },
     methods: {
+        init() {
+            if (this.file.type.indexOf("image") == -1) {
+                this.content_text = this.file.text;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.content_text = e.target.result;
+                };
+                reader.readAsText(this.file.content);
+            }
+            this.pageStyle = this.file.page_style;
+            this.coverCheck = this.file.cover;
+        },
         formatSizeUnits(bytes) {
             if (bytes >= 1073741824) {
                 bytes = (bytes / 1073741824).toFixed(2) + " GB";
@@ -187,21 +191,24 @@ export default {
     },
     // if change file, update content_text
     watch: {
-        file: {
-            handler: function (new_file) {
-                console.log("kitayo");
-                if (new_file.type.indexOf("image") == -1) {
-                    this.content_text = new_file.text;
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        this.content_text = e.target.result;
-                    };
-                    reader.readAsText(new_file.content);
-                }
-                this.pageStyle = new_file.page_style;
-                console.log(this.pageStyle);
+        file_c: {
+            handler: function () {
+                this.init();
             },
             deep: true,
+        },
+        "props.file": {
+            handler: function () {
+                this.init();
+            },
+            deep: true,
+        },
+    },
+    computed: {
+        file_c() {
+            return useEpubStore().epub.files.find(
+                (file) => file.id === this.file.id
+            );
         },
     },
 };

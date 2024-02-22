@@ -11,7 +11,7 @@
             </tr>
         </thead>
 
-        <draggable v-model="epub.files" tag="tbody" item-key="index">
+        <draggable v-model="files" tag="tbody" item-key="id">
             <template #item="{ element }">
                 <tr>
                     <FileTableContent
@@ -24,18 +24,8 @@
                 </tr>
             </template>
         </draggable>
-        <!-- <tbody>
-            <tr v-for="(file, index) in epub.files" :key="index">
-                <FileTableContent
-                    :file="file"
-                    @update:pageStyle="changePageStyle"
-                    @update:coverCheck="changeCoverCheck"
-                    @delete:file="deleteFile"
-                    ref="fileTableContent"
-                />
-            </tr>
-        </tbody> -->
     </v-table>
+    <v-btn @click="debug">Debug</v-btn>
 </template>
 
 <script>
@@ -52,9 +42,10 @@ export default {
     },
     created() {
         this.epub = useEpubStore().epub;
-        useEpubStore().$subscribe((epub) => {
-            console.log("epub changed");
-            console.log(epub);
+        useEpubStore().$subscribe((mutation, state) => {
+            console.log(mutation);
+            console.log(state);
+            // this.contentsReload();
         });
     },
     data() {
@@ -80,24 +71,23 @@ export default {
         },
         contentsReload() {
             if (this.$refs.fileTableContent) {
-                this.$refs.fileTableContent.forEach((element) => {
-                    element.reload();
-                });
+                // this.$refs.fileTableContent.forEach((element) => {
+                //     element.reload();
+                // });
             }
         },
-    },
-    watch: {
-        epub: {
-            handler() {
-                console.log("epub changed");
-            },
-            deep: true,
+        debug() {
+            console.log(this.files);
         },
-        "useEpubStore().epub": {
-            handler() {
-                console.log("epub.files changed");
+    },
+    computed: {
+        files: {
+            get() {
+                return this.epub.files;
             },
-            deep: true,
+            set(value) {
+                this.epub.files = value;
+            },
         },
     },
 };

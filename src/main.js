@@ -6,24 +6,11 @@ import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
-import { mdiAccount, mdiArrowDown, mdiArrowUp } from "@mdi/js";
 // VueRouter
 import router from "./router.js";
 // pinia
 import { createPinia } from "pinia";
-// i18n
-import { createI18n } from "vue-i18n";
-import ja from "./locales/ja.json";
-import en from "./locales/en.json";
-
-const i18n = createI18n({
-    locale: "ja",
-    fallbackLocale: "ja",
-    messages: {
-        ja,
-        en,
-    },
-});
+import i18n from "./i18n.js";
 
 const vuetify = createVuetify({
     components,
@@ -32,9 +19,6 @@ const vuetify = createVuetify({
         defaultSet: "mdi",
         aliases: {
             ...aliases,
-            account: mdiAccount,
-            arrowup: mdiArrowUp,
-            arrpwdown: mdiArrowDown,
         },
         sets: {
             mdi,

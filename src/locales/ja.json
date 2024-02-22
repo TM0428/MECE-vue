@@ -1,13 +1,88 @@
 {
     "importFolderLabel": "フォルダを選択",
     "cover": "表紙",
+    "steps": {
+        "step1": "メタデータ入力",
+        "step2": "ファイル選択",
+        "step3": "目次編集",
+        "step4": "EPUBファイル作成"
+    },
     "start": {
         "title": "EPUBファイルを作成",
-        "description": "ファイルを選択してください。",
+        "description": "1からEPUBファイルを作成します。",
         "create": "作成を開始",
         "createWithIsbnTitle": "ISBNを指定してEPUBファイルを作成",
         "descriptionWithIsbn": "ISBNを指定してEPUBファイルを作成します。",
-        "createWithIsbn": "ISBNを入力..."
+        "createWithIsbn": "ISBNを入力...",
+        "isbnCode": "ISBNコード",
+        "isbnCodeDescription": "https://api.openbd.jp/ から書籍情報を取得します。",
+        "isbnCodeError": "ISBNコードを入力してください。",
+        "import": "ISBNを指定して作成を開始",
+        "cancel": "キャンセル"
+    },
+    "epubMetadata": {
+        "id": "ID",
+        "delete": "削除",
+        "cancel": "キャンセル",
+        "title": {
+            "label": "タイトル",
+            "placeholder": "タイトル名",
+            "yomilabel": "タイトル名(よみ)"
+        },
+        "creator": {
+            "label": "著者",
+            "placeholder": "著者名",
+            "yomilabel": "著者名(よみ)",
+            "role": "著者の役割",
+            "roleOptions": {
+                "aut": "著者",
+                "ill": "イラストレーター",
+                "trl": "翻訳者",
+                "edt": "編集者",
+                "oth": "その他"
+            },
+            "sequence": "著者の順番",
+            "add": "著者を追加",
+            "deleteConfirm": "本当に著者を削除しますか？"
+        },
+        "description": {
+            "label": "概要"
+        },
+        "publisher": {
+            "label": "出版社",
+            "placeholder": "出版社名",
+            "yomilabel": "出版社名(よみ)"
+        },
+        "anotherMetadata": {
+            "label": "その他のメタデータ",
+            "language": {
+                "label": "言語"
+            },
+            "languages": {
+                "ja": "日本語",
+                "en": "英語",
+                "de": "ドイツ語"
+            },
+            "type": {
+                "label": "書籍のタイプ"
+            },
+            "types": {
+                "novel": "小説",
+                "comic": "コミック",
+                "photo": "写真集",
+                "magazine": "雑誌",
+                "artbook": "画集",
+                "textbook": "教科書",
+                "other": "その他"
+            },
+            "modified": {
+                "label": "発行日"
+            },
+            "pageProgression": {
+                "rtl": "右開き",
+                "ltr": "左開き"
+            }
+        }
     },
     "displayStyle": {
         "label": "表示スタイル",
@@ -53,5 +128,19 @@
         "noFile": "ファイルを選択...",
         "error": "エラー",
         "noFileError": "ファイルを選択してください。"
-    }
+    },
+    "makeEpubForm": {
+        "title": "タイトル",
+        "creator": "著者",
+        "publisher": "出版社",
+        "description": "概要",
+        "makeEpub": "EPUBファイルを作成",
+        "confirm": "確認",
+        "confirmMessage": "このデータでEPUBファイルを作成しますか？",
+        "no": "キャンセル",
+        "yes": "作成"
+    },
+    "next": "次のステップ",
+    "back": "前のステップ",
+    "TocTitle": "目次"
 }
