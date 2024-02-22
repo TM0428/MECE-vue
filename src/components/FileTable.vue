@@ -11,7 +11,7 @@
             </tr>
         </thead>
 
-        <draggable v-model="files" tag="tbody" item-key="index">
+        <draggable v-model="files" tag="tbody" item-key="id">
             <template #item="{ element }">
                 <tr>
                     <FileTableContent
@@ -25,6 +25,7 @@
             </template>
         </draggable>
     </v-table>
+    <v-btn @click="debug">Debug</v-btn>
 </template>
 
 <script>
@@ -41,9 +42,10 @@ export default {
     },
     created() {
         this.epub = useEpubStore().epub;
-        useEpubStore().$subscribe((epub) => {
-            console.log("epub changed");
-            console.log(epub);
+        useEpubStore().$subscribe((mutation, state) => {
+            console.log(mutation);
+            console.log(state);
+            // this.contentsReload();
         });
     },
     data() {
@@ -74,10 +76,18 @@ export default {
                 // });
             }
         },
+        debug() {
+            console.log(this.files);
+        },
     },
     computed: {
-        files() {
-            return useEpubStore().epub.files;
+        files: {
+            get() {
+                return this.epub.files;
+            },
+            set(value) {
+                this.epub.files = value;
+            },
         },
     },
 };
