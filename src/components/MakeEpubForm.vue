@@ -5,7 +5,7 @@
                 <!-- cover image view-->
                 <div v-if="cover_file">
                     <v-img
-                        :src="createObjectURL(cover_file)"
+                        :src="createObjectURL(cover_file.file)"
                         alt="Preview"
                         style="width: 100%"
                     />

@@ -51,7 +51,7 @@ export default {
             create_dialog: false,
         };
     },
-    created() {
+    mounted() {
         if (this.epub.tables.length === 0) {
             // 表紙の目次のみを追加
             const file = this.epub.files.find((file) => file.cover === true);

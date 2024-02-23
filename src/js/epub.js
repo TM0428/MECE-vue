@@ -190,12 +190,21 @@ export class Metadata {
 }
 
 export class TocContent {
-    constructor(title = "title", file, id = "xhtml-p-cover") {
+    constructor(title = "title", efile, id = "xhtml-p-cover") {
         this.title = title;
-        this.file = file;
+        this.efile = efile;
+        if (efile != undefined) {
+            this.file = efile.file;
+        }
         this.children = [];
         this.id = id;
     }
+
+    setEfile(efile) {
+        this.efile = efile;
+        this.file = efile.file;
+    }
+
     /**
      * @param {xmlbuilder} nav_xml
      * @return {xmlbuilder} nav_xml
