@@ -15,10 +15,9 @@
             <template #item="{ element }">
                 <tr>
                     <FileTableContent
-                        :file="element"
-                        @update:page-style="changePageStyle"
-                        @update:cover-check="changeCoverCheck"
-                        @delete:file="deleteFile"
+                        :efile="element"
+                        @update:file="updateFile(id, data)"
+                        @delete:file="deleteFile(id)"
                         ref="fileTableContent"
                     />
                 </tr>
@@ -40,6 +39,13 @@ export default {
         FileTableContent,
         draggable,
     },
+    props: {
+        prop_files: {
+            type: Array,
+            required: true,
+        },
+    },
+    emits: ["update:files", "update:file", "delete:file"],
     created() {
         this.epub = useEpubStore().epub;
         useEpubStore().$subscribe((mutation, state) => {
@@ -54,20 +60,11 @@ export default {
         };
     },
     methods: {
-        changePageStyle(id, page_style) {
-            const file = this.epub.files.find((file) => file.id === id);
-            file.page_style = page_style;
-        },
-        changeCoverCheck(id, cover_check) {
-            const file = this.epub.files.find((file) => file.id === id);
-            file.cover = cover_check;
+        updateFile(id, data) {
+            this.$emit("update:file", id, data);
         },
         deleteFile(id) {
-            this.epub.files.forEach((element) => {
-                if (element.id === id) {
-                    this.epub.files.splice(this.epub.files.indexOf(element), 1);
-                }
-            });
+            this.$emit("delete:file", id);
         },
         contentsReload() {
             if (this.$refs.fileTableContent) {
@@ -83,10 +80,12 @@ export default {
     computed: {
         files: {
             get() {
-                return this.epub.files;
+                return this.prop_files;
             },
             set(value) {
-                this.epub.files = value;
+                // this.epub.files = value;
+                console.log(value);
+                this.$emit("update:files", value);
             },
         },
     },

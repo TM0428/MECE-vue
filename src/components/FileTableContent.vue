@@ -4,24 +4,24 @@
         <v-checkbox
             v-model="coverCheck"
             @change="changeCover"
-            :disabled="file.type.indexOf('image') == -1"
+            :disabled="efile.file.type.indexOf('image') == -1"
             hide-details
         ></v-checkbox>
     </td>
     <td @click="dialog = true" class="cursor-pointer">
         <v-icon
-            v-if="file.type.indexOf('image') != -1"
+            v-if="efile.file.type.indexOf('image') != -1"
             :icon="mdiImageIcon"
         ></v-icon>
         <v-icon v-else :icon="mdiFileIcon"></v-icon>
-        {{ file.name }}
+        {{ efile.file.name }}
         <v-dialog v-model="dialog" max-width="500px">
             <v-card>
                 <v-card-title>
-                    <span class="headline"> {{ file.name }} </span>
+                    <span class="headline"> {{ efile.file.name }} </span>
                 </v-card-title>
                 <v-card-text>
-                    <div v-if="file.type.indexOf('image') == -1">
+                    <div v-if="efile.file.type.indexOf('image') == -1">
                         <textarea
                             :value="content_text"
                             style="width: 100%; height: 200px"
@@ -31,7 +31,7 @@
                     </div>
                     <div v-else>
                         <img
-                            :src="createObjectURL(file)"
+                            :src="createObjectURL(efile.file)"
                             alt="Preview"
                             style="width: 100%"
                         />
@@ -46,9 +46,9 @@
         </v-dialog>
     </td>
     <td>
-        {{ formatSizeUnits(file.size) }}
+        {{ formatSizeUnits(efile.file.size) }}
     </td>
-    <td>{{ file.type }}</td>
+    <td>{{ efile.file.type }}</td>
     <td>
         <v-select
             :label="this.$t('displayStyle.label')"
@@ -61,6 +61,7 @@
             hide-details
             class="my-2"
         ></v-select>
+        <!-- {{ efile.page_style }} -->
     </td>
     <td>
         <v-icon
@@ -93,13 +94,13 @@
 
 <script>
 // import { ContentFile } from "@/js/epub";
-import { useEpubStore } from "@/stores/epub_store";
 import { mdiTrashCan, mdiImage, mdiFile } from "@mdi/js";
+import { ExtendedFile } from "@/js/epub";
 
 export default {
     name: "FileTableContent",
     props: {
-        file: Object,
+        efile: ExtendedFile,
     },
     emits: ["update:pageStyle", "update:coverCheck", "delete:file"],
     data() {
@@ -111,7 +112,6 @@ export default {
             mdiTrashCanIcon: mdiTrashCan,
             mdiImageIcon: mdiImage,
             mdiFileIcon: mdiFile,
-            pageStyle: "right",
             styles: [
                 {
                     value: "right",
@@ -137,16 +137,16 @@ export default {
     },
     methods: {
         init() {
-            if (this.file.type.indexOf("image") == -1) {
-                this.content_text = this.file.text;
+            if (this.efile.file.type.indexOf("image") == -1) {
+                this.content_text = this.efile.file.text;
+                // read file as tex in this.efile.file
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     this.content_text = e.target.result;
                 };
-                reader.readAsText(this.file.content);
+                reader.readAsText(this.efile.file);
             }
-            this.pageStyle = this.file.page_style;
-            this.coverCheck = this.file.cover;
+            this.coverCheck = this.efile.cover;
         },
         formatSizeUnits(bytes) {
             if (bytes >= 1073741824) {
@@ -165,7 +165,7 @@ export default {
             return bytes;
         },
         coverDisabled() {
-            if (this.file.type.indexOf("image") == -1) {
+            if (this.efile.file.type.indexOf("image") == -1) {
                 return true;
             }
         },
@@ -174,41 +174,28 @@ export default {
         },
         changeDisplayStyle() {
             console.log(this.pageStyle);
-            this.$emit("update:pageStyle", this.file.id, this.pageStyle);
-            // this.file.page_style = this.pageStyle;
         },
         changeCover() {
             console.log(this.coverCheck);
-            this.$emit("update:coverCheck", this.file.id, this.coverCheck);
-            // this.file.cover = this.coverCheck;
+            const ef = this.efile;
+            ef.cover = this.coverCheck;
+            this.$emit("update:file", this.efile.id, ef);
         },
         deleteFile(id) {
             this.$emit("delete:file", id);
         },
-        reload() {
-            this.pageStyle = this.file.page_style;
-        },
     },
     // if change file, update content_text
-    watch: {
-        file_c: {
-            handler: function () {
-                this.init();
-            },
-            deep: true,
-        },
-        "props.file": {
-            handler: function () {
-                this.init();
-            },
-            deep: true,
-        },
-    },
     computed: {
-        file_c() {
-            return useEpubStore().epub.files.find(
-                (file) => file.id === this.file.id
-            );
+        pageStyle: {
+            get() {
+                return this.efile.page_style;
+            },
+            set(value) {
+                const ef = this.efile;
+                ef.page_style = value;
+                this.$emit("update:file", this.efile.id, ef);
+            },
         },
     },
 };

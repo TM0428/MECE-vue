@@ -31,7 +31,12 @@
                 ></v-file-input>
             </v-col>
             <v-col cols="12">
-                <FileTable ref="filetable" />
+                <FileTable
+                    :prop_files="files_reactive"
+                    @update:file="updateReactiveFile(id, data)"
+                    @update:files="updateReactiveFiles($event)"
+                    @delete:file="deleteReactiveFile(id)"
+                />
             </v-col>
         </v-row>
         <EpubMakeRouter :back="back" :next="next" />
@@ -44,6 +49,8 @@ import { PAGE_STYLE } from "@/js/statics";
 import FileTable from "@/components/FileTable.vue";
 import EpubMakeStepper from "@/components/EpubMakeStepper.vue";
 import EpubMakeRouter from "@/components/EpubMakeRouter.vue";
+import { reactive } from "vue";
+import { ExtendedFile } from "@/js/epub";
 
 export default {
     name: "SourceFileImport",
@@ -56,6 +63,7 @@ export default {
         return {
             dialog: false,
             files: [],
+            files_reactive: reactive([]),
             displayType: "right-left",
             file_index: 0,
             styles: PAGE_STYLE,
@@ -78,25 +86,31 @@ export default {
             // add value to each file
             // styles: right-left, left-right, center
             this.files.forEach((file) => {
-                file.id = this.file_index;
-                if (file.type.indexOf("image") != -1) {
+                const ef = new ExtendedFile(
+                    file,
+                    this.file_index.toString(),
+                    "",
+                    ""
+                );
+                ef.id = this.file_index;
+                if (ef.file.type.indexOf("image") != -1) {
                     const img_render = new Image();
-                    img_render.src = URL.createObjectURL(file);
+                    img_render.src = URL.createObjectURL(ef.file);
                     img_render.onload = function () {
                         const width = this.width;
                         const height = this.height;
-                        file.width = width;
-                        file.height = height;
+                        ef.width = width;
+                        ef.height = height;
                         console.log(
-                            "width: " + file.width + ", height: " + file.height
+                            "width: " + ef.width + ", height: " + ef.height
                         );
                     };
                     img_render.onerror = function () {
-                        file.width = 720;
-                        file.height = 1280;
+                        ef.width = 720;
+                        ef.height = 1280;
                     };
                 }
-                this.epub.files.push(file);
+                this.files_reactive.push(ef);
                 this.file_index++;
             });
             this.pageStyleChange();
@@ -104,50 +118,64 @@ export default {
         },
         pageStyleChange() {
             console.log("pageStyleChange");
-            this.epub.files.forEach((file, index) => {
+            this.files_reactive.forEach((file, index) => {
                 switch (this.displayType) {
                     case "right-left":
                         if (index % 2 === 0) {
-                            file.page_style = "right";
+                            file.changePageStyle("right");
                         } else {
-                            file.page_style = "left";
+                            file.changePageStyle("left");
                         }
                         break;
                     case "left-right":
                         if (index % 2 === 0) {
-                            file.page_style = "left";
+                            file.changePageStyle("left");
                         } else {
-                            file.page_style = "right";
+                            file.changePageStyle("right");
                         }
                         break;
                     case "center-right-left":
                         // center, right, left, right, left, right, ...
                         if (index === 0) {
-                            file.page_style = "center";
+                            file.changePageStyle("center");
                         } else if (index % 2 === 0) {
-                            file.page_style = "left";
+                            file.changePageStyle("left");
                         } else {
-                            file.page_style = "right";
+                            file.changePageStyle("right");
                         }
                         break;
                     case "center-left-right":
                         // center, left, right, left, right, left, ...
                         if (index === 0) {
-                            file.page_style = "center";
+                            file.changePageStyle("center");
                         } else if (index % 2 === 0) {
-                            file.page_style = "right";
+                            file.changePageStyle("right");
                         } else {
-                            file.page_style = "left";
+                            file.changePageStyle("left");
                         }
                         break;
                     case "center":
                     default:
-                        file.page_style = "center";
+                        file.changePageStyle("center");
                         break;
                 }
             });
-            this.$refs.filetable.contentsReload();
             // console.log(this.epub.files);
+        },
+        updateReactiveFile(id, data) {
+            const index = this.files_reactive.findIndex(
+                (file) => file.id === id
+            );
+            this.files_reactive[index] = data;
+        },
+        updateReactiveFiles(value) {
+            this.files_reactive = value;
+        },
+        deleteReactiveFile(id) {
+            const index = this.files_reactive.findIndex(
+                (file) => file.id === id
+            );
+            this.files_reactive.splice(index, 1);
         },
     },
 };

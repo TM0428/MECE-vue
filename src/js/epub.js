@@ -232,11 +232,17 @@ export class TocContent {
     }
 }
 
-export class ExtendedFile extends File {
+export class ExtendedFile {
     constructor(file, id = "id", media_type = "", page_style = "") {
-        super(file);
+        this.file = file;
         this.id = id;
         this.media_type = media_type;
+        this.page_style = page_style;
+        this.width = 0;
+        this.height = 0;
+        this.cover = false;
+    }
+    changePageStyle(page_style) {
         this.page_style = page_style;
     }
 }
