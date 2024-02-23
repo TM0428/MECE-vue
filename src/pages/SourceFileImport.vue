@@ -74,7 +74,10 @@ export default {
     created() {
         this.epub_store = useEpubStore();
         this.epub = this.epub_store.epub;
-        this.file_index = this.epub.files.length;
+        this.file_index = this.epub.file_id;
+        if (this.file_index > 0) {
+            this.files_reactive = this.epub.files;
+        }
     },
     methods: {
         importFile() {
@@ -86,13 +89,7 @@ export default {
             // add value to each file
             // styles: right-left, left-right, center
             this.files.forEach((file) => {
-                const ef = new ExtendedFile(
-                    file,
-                    this.file_index.toString(),
-                    "",
-                    ""
-                );
-                ef.id = this.file_index;
+                const ef = new ExtendedFile(file, this.file_index, "");
                 if (ef.file.type.indexOf("image") != -1) {
                     const img_render = new Image();
                     img_render.src = URL.createObjectURL(ef.file);
@@ -177,6 +174,10 @@ export default {
             );
             this.files_reactive.splice(index, 1);
         },
+    },
+    unmounted() {
+        this.epub_store.epub.files = this.files_reactive;
+        this.epub_store.epub.file_id = this.file_index;
     },
 };
 </script>

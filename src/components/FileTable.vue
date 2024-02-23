@@ -31,7 +31,6 @@
 import FileTableContent from "./FileTableContent.vue";
 import draggable from "vuedraggable";
 import { mdiTrashCan } from "@mdi/js";
-import { useEpubStore } from "@/stores/epub_store";
 
 export default {
     name: "FileTable",
@@ -46,14 +45,7 @@ export default {
         },
     },
     emits: ["update:files", "update:file", "delete:file"],
-    created() {
-        this.epub = useEpubStore().epub;
-        useEpubStore().$subscribe((mutation, state) => {
-            console.log(mutation);
-            console.log(state);
-            // this.contentsReload();
-        });
-    },
+    created() {},
     data() {
         return {
             mdiTrashCanIcon: mdiTrashCan,

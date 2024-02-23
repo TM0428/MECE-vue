@@ -233,10 +233,10 @@ export class TocContent {
 }
 
 export class ExtendedFile {
-    constructor(file, id = "id", media_type = "", page_style = "") {
+    constructor(file, id = 0, page_style = "") {
         this.file = file;
         this.id = id;
-        this.media_type = media_type;
+        this.media_type = file.type;
         this.page_style = page_style;
         this.width = 0;
         this.height = 0;
@@ -255,6 +255,7 @@ export class Epub {
         this.description = new Description();
         this.metadata = new Metadata();
         this.files = [];
+        this.file_id = 0;
         this.tables = [];
         this.create_folder = "./sample";
         this.file_name = "sample.epub";

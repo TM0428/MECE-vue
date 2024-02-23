@@ -83,7 +83,7 @@
                     <v-btn color="primary" @click="deleteDialog = false">
                         {{ this.$t("deleteFile.cancel") }}
                     </v-btn>
-                    <v-btn color="error" @click="deleteFile(file.id)">
+                    <v-btn color="error" @click="deleteFile(efile.id)">
                         {{ this.$t("deleteFile.delete") }}
                     </v-btn>
                 </v-card-actions>
@@ -102,7 +102,7 @@ export default {
     props: {
         efile: ExtendedFile,
     },
-    emits: ["update:pageStyle", "update:coverCheck", "delete:file"],
+    emits: ["update:file", "delete:file"],
     data() {
         return {
             dialog: false,
