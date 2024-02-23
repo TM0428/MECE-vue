@@ -1,3 +1,5 @@
+var _ = require("lodash");
+
 export class Creator {
     constructor(
         name = "",
@@ -314,31 +316,26 @@ export async function create_epub_from_isbn(isbn) {
     const response = await fetch(url);
     const data = await response.json();
     const book = data[0];
+    const onix = data[0].onix;
     console.log(book);
     const epub = new Epub();
     epub.title = new Title(
-        data[0].onix.DescriptiveDetail.TitleDetail.TitleElement.TitleText
-            .content || "",
-        data[0].onix.DescriptiveDetail.TitleDetail.TitleElement.TitleText
+        onix.DescriptiveDetail.TitleDetail.TitleElement.TitleText.content || "",
+        onix.DescriptiveDetail.TitleDetail.TitleElement.TitleText
             .collationkey || ""
     );
     epub.creators = [];
-    for (
-        let i = 0;
-        i < data[0].onix.DescriptiveDetail.Contributor.length;
-        i++
-    ) {
+    for (let i = 0; i < onix.DescriptiveDetail.Contributor.length; i++) {
         let id = "creator" + (i + 1).toString().padStart(2, "0");
         epub.creators.push(
             new Creator(
-                data[0].onix.DescriptiveDetail.Contributor[i].PersonName
-                    .content || "",
-                data[0].onix.DescriptiveDetail.Contributor[i].PersonName
-                    .collationkey || "",
+                onix.DescriptiveDetail.Contributor[i].PersonName.content || "",
+                onix.DescriptiveDetail.Contributor[i].PersonName.collationkey ||
+                    "",
                 "aut",
                 Number(
-                    data[0].onix.DescriptiveDetail.Contributor[i]
-                        .SequenceNumber || i + 1
+                    onix.DescriptiveDetail.Contributor[i].SequenceNumber ||
+                        i + 1
                 ),
                 id,
                 i
@@ -346,22 +343,23 @@ export async function create_epub_from_isbn(isbn) {
         );
     }
     epub.publishers = [];
-    if (data[0].onix.PublishingDetail.Publisher.PublisherName != undefined) {
+    if (_.has(onix, "PublishingDetail.Publisher.PublisherName")) {
         epub.publishers.push(
-            new Publisher(
-                data[0].onix.PublishingDetail.Publisher.PublisherName || "",
-                ""
-            )
+            new Publisher(onix.PublishingDetail.Publisher.PublisherName, "")
+        );
+    } else {
+        epub.publishers.push(
+            new Publisher(_.get(epub, "summary.publisher", ""), "")
         );
     }
 
     let description = "";
-    for (let i = 0; i < data[0].onix.CollateralDetail.TextContent.length; i++) {
+    for (let i = 0; i < onix.CollateralDetail.TextContent.length; i++) {
         if (
-            data[0].onix.CollateralDetail.TextContent[i].ContentAudience ===
+            onix.CollateralDetail.TextContent[i].ContentAudience ===
             "00" /* Description */
         ) {
-            description += data[0].onix.CollateralDetail.TextContent[i].Text;
+            description += onix.CollateralDetail.TextContent[i].Text;
         }
     }
 
