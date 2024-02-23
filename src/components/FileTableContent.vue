@@ -56,7 +56,6 @@
             :items="styles"
             item-title="text"
             item-value="value"
-            @update:model-value="changeDisplayStyle"
             outlined
             hide-details
             class="my-2"
@@ -171,9 +170,6 @@ export default {
         },
         createObjectURL(file) {
             return URL.createObjectURL(file);
-        },
-        changeDisplayStyle() {
-            console.log(this.pageStyle);
         },
         changeCover() {
             console.log(this.coverCheck);
