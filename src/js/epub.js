@@ -230,7 +230,7 @@ export class TocContent {
     xml(nav_xml) {
         let nav_point = nav_xml.ele("li");
         let a = nav_point.ele("a", this.title);
-        a.att("href", this.file.href);
+        a.att("href", this.efile.href);
         if (this.children.length > 0) {
             let ol = nav_point.ele("ol");
             for (let child of this.children) {

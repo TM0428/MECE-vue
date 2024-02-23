@@ -137,10 +137,11 @@ async function image_copy(epub) {
     }
     const totalDigits = String(epub.files.length).length;
     for (let i = 0; i < epub.files.length; i++) {
-        let file = epub.files[i];
+        const efile = epub.files[i];
+        let file = epub.files[i].file;
         if (file.type.indexOf("image") != -1) {
             let file_name = file.name;
-            if (file.cover != undefined && file.cover == true) {
+            if (efile.cover != undefined && efile.cover == true) {
                 file_name = "i-cover." + file.name.split(".").pop();
             } else {
                 // file name is image001.jpg,...image100.jpg
@@ -151,9 +152,9 @@ async function image_copy(epub) {
                     file.name.split(".").pop();
             }
             fs.copyFileSync(file.path, folder_path + "/" + file_name);
-            file.image_path = "image/" + file_name;
+            efile.image_path = "image/" + file_name;
             // make xhtml
-            await make_xhtml_from_image(epub, file, file_name);
+            await make_xhtml_from_image(epub, efile, file_name);
         } else {
             console.log("not image");
             fs.copyFileSync(file.path, folder_path + "/" + file.name);
@@ -208,7 +209,7 @@ async function make_xhtml_from_image(epub, file, file_name) {
         await fs.promises.writeFile(xhtml_path, xhtml.end({ pretty: true }));
     } else {
         const img_render = new Image();
-        img_render.src = URL.createObjectURL(file);
+        img_render.src = URL.createObjectURL(file.file);
         img_render.onload = function () {
             const width = this.width;
             const height = this.height;
