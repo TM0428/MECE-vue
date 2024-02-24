@@ -1,17 +1,5 @@
 <template>
-    <v-table height="300px" fixed-header>
-        <thead>
-            <tr>
-                <th>{{ $t("filesTable.cover") }}</th>
-                <th>{{ $t("filesTable.name") }}</th>
-                <th>{{ $t("filesTable.size") }}</th>
-                <th>{{ $t("filesTable.filetype") }}</th>
-                <th>{{ $t("filesTable.displayStyle") }}</th>
-                <th><v-icon :icon="mdiTrashCanIcon"></v-icon></th>
-            </tr>
-        </thead>
-
-        <draggable v-model="files" tag="tbody" item-key="id">
+    <!-- <draggable v-model="files" tag="tbody" item-key="id">
             <template #item="{ element }">
                 <tr>
                     <FileTableContent
@@ -22,21 +10,50 @@
                     />
                 </tr>
             </template>
-        </draggable>
-    </v-table>
+        </draggable> -->
+    <v-infinite-scroll
+        height="300px"
+        :items="showFile"
+        :onLoad="contentsReload"
+    >
+        <v-table fixed-header>
+            <thead>
+                <tr>
+                    <th>{{ $t("filesTable.cover") }}</th>
+                    <th>{{ $t("filesTable.name") }}</th>
+                    <th>{{ $t("filesTable.size") }}</th>
+                    <th>{{ $t("filesTable.filetype") }}</th>
+                    <th>{{ $t("filesTable.displayStyle") }}</th>
+                    <th><v-icon :icon="mdiTrashCanIcon"></v-icon></th>
+                </tr>
+            </thead>
+            <tbody>
+                <template v-for="file in showFile" :key="file.id">
+                    <tr>
+                        <FileTableContent
+                            :efile="file"
+                            @update:file="updateFile(id, data)"
+                            @delete:file="deleteFile(id)"
+                            ref="fileTableContent"
+                        />
+                    </tr>
+                </template>
+            </tbody>
+        </v-table>
+    </v-infinite-scroll>
     <v-btn @click="debug">Debug</v-btn>
 </template>
 
 <script>
 import FileTableContent from "./FileTableContent.vue";
-import draggable from "vuedraggable";
+// import draggable from "vuedraggable";
 import { mdiTrashCan } from "@mdi/js";
 
 export default {
     name: "FileTable",
     components: {
         FileTableContent,
-        draggable,
+        // draggable,
     },
     props: {
         prop_files: {
@@ -49,6 +66,7 @@ export default {
     data() {
         return {
             mdiTrashCanIcon: mdiTrashCan,
+            showFile: [],
         };
     },
     methods: {
@@ -58,12 +76,14 @@ export default {
         deleteFile(id) {
             this.$emit("delete:file", id);
         },
-        contentsReload() {
-            if (this.$refs.fileTableContent) {
-                // this.$refs.fileTableContent.forEach((element) => {
-                //     element.reload();
-                // });
+        async contentsReload({ done }) {
+            const length = this.showFile.length;
+            for (let i = length; i < length + 10; i++) {
+                if (this.prop_files[i]) {
+                    this.showFile.push(this.prop_files[i]);
+                }
             }
+            done("ok");
         },
         debug() {
             console.log(this.files);
