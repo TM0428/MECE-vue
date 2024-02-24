@@ -32,7 +32,7 @@
             </v-col>
             <v-col cols="12">
                 <FileTable
-                    :prop_files="files_reactive"
+                    :prop_files="extended_files"
                     @update:file="updateReactiveFile(id, data)"
                     @update:files="updateReactiveFiles($event)"
                     @delete:file="deleteReactiveFile(id)"
@@ -61,9 +61,8 @@ export default {
     },
     data() {
         return {
-            dialog: false,
             files: [],
-            files_reactive: reactive([]),
+            extended_files: reactive([]),
             displayType: "right-left",
             file_index: 0,
             styles: PAGE_STYLE,
@@ -76,7 +75,7 @@ export default {
         this.epub = this.epub_store.epub;
         this.file_index = this.epub.file_id;
         if (this.file_index > 0) {
-            this.files_reactive = this.epub.files;
+            this.extended_files = this.epub.files;
         }
     },
     methods: {
@@ -107,15 +106,15 @@ export default {
                         ef.height = 1280;
                     };
                 }
-                this.files_reactive.push(ef);
+                this.extended_files.push(ef);
                 this.file_index++;
             });
             this.pageStyleChange();
-            this.dialog = true;
+            this.files = [];
         },
         pageStyleChange() {
             console.log("pageStyleChange");
-            this.files_reactive.forEach((file, index) => {
+            this.extended_files.forEach((file, index) => {
                 switch (this.displayType) {
                     case "right-left":
                         if (index % 2 === 0) {
@@ -160,23 +159,23 @@ export default {
             // console.log(this.epub.files);
         },
         updateReactiveFile(id, data) {
-            const index = this.files_reactive.findIndex(
+            const index = this.extended_files.findIndex(
                 (file) => file.id === id
             );
-            this.files_reactive[index] = data;
+            this.extended_files[index] = data;
         },
         updateReactiveFiles(value) {
-            this.files_reactive = value;
+            this.extended_files = value;
         },
         deleteReactiveFile(id) {
-            const index = this.files_reactive.findIndex(
+            const index = this.extended_files.findIndex(
                 (file) => file.id === id
             );
-            this.files_reactive.splice(index, 1);
+            this.extended_files.splice(index, 1);
         },
     },
     unmounted() {
-        this.epub_store.epub.files = this.files_reactive;
+        this.epub_store.epub.files = this.extended_files;
         this.epub_store.epub.file_id = this.file_index;
     },
 };

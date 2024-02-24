@@ -354,19 +354,21 @@ export async function create_epub_from_isbn(isbn) {
     }
 
     let description = "";
-    for (let i = 0; i < onix.CollateralDetail.TextContent.length; i++) {
-        if (
-            onix.CollateralDetail.TextContent[i].ContentAudience ===
-            "00" /* Description */
-        ) {
-            description += onix.CollateralDetail.TextContent[i].Text;
+    if (_.has(onix, "CollateralDetail.TextContent")) {
+        for (let i = 0; i < onix.CollateralDetail.TextContent.length; i++) {
+            if (
+                onix.CollateralDetail.TextContent[i].ContentAudience ===
+                "00" /* Description */
+            ) {
+                description += onix.CollateralDetail.TextContent[i].Text;
+            }
         }
     }
 
     epub.description = new Description(description);
 
     if (book.hanmoto) {
-        epub.metadata.modified = new Date(book.hanmoto.datemodified);
+        epub.metadata.modified = new Date(book.hanmoto.datecreated);
     }
 
     return epub;
