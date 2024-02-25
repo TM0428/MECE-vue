@@ -3,8 +3,8 @@
         <v-main>
             <EpubMakeStepper :step="3" />
             <MakeEpubForm />
-            <EpubMakeRouter :back="back" :next="next" />
         </v-main>
+        <EpubMakeRouter :back="back" :next="next" />
     </v-app>
 </template>
 

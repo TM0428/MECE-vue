@@ -19,6 +19,7 @@
                     v-model="epub.title.title"
                     :label="this.$t('makeEpubForm.title')"
                     outlined
+                    readonly
                     hide-details
                     class="my-2"
                 ></v-text-field>
@@ -27,6 +28,7 @@
                         v-model="creator.name"
                         :label="this.$t('makeEpubForm.creator')"
                         outlined
+                        readonly
                         hide-details
                         class="my-2"
                     ></v-text-field>
@@ -36,6 +38,7 @@
                         v-model="publisher.name"
                         :label="this.$t('makeEpubForm.publisher')"
                         outlined
+                        readonly
                         hide-details
                         class="my-2"
                     ></v-text-field>
@@ -49,7 +52,14 @@
                     {{ this.$t("makeEpubForm.makeEpub") }}
                 </v-btn>
                 <v-dialog v-model="confirmDialog" width="500">
-                    <v-card>
+                    <confirm-dialog
+                        :comfirmTitle="this.$t('makeEpubForm.confirm')"
+                        :confirmMessage="this.$t('makeEpubForm.confirmMessage')"
+                        :confirmYes="this.$t('makeEpubForm.yes')"
+                        :confirmNo="this.$t('makeEpubForm.no')"
+                        @confirm="makeEpub"
+                    ></confirm-dialog>
+                    <!-- <v-card>
                         <v-card-title>
                             {{ this.$t("makeEpubForm.confirm") }}
                         </v-card-title>
@@ -64,7 +74,7 @@
                                 {{ this.$t("makeEpubForm.no") }}
                             </v-btn>
                         </v-card-actions>
-                    </v-card>
+                    </v-card> -->
                 </v-dialog>
             </v-col>
         </v-row>
@@ -75,9 +85,13 @@
 import { useEpubStore } from "@/stores/epub_store";
 import { mdiFile } from "@mdi/js";
 import { create_epub } from "@/js/epub_create";
+import ConfirmDialog from "./ConfirmDialog.vue";
 
 export default {
     name: "MakeEpubForm",
+    components: {
+        ConfirmDialog,
+    },
     data() {
         return {
             epub: useEpubStore().epub,
@@ -97,8 +111,13 @@ export default {
         createObjectURL(file) {
             return URL.createObjectURL(file);
         },
-        makeEpub() {
-            create_epub(this.epub);
+        async makeEpub(confirm) {
+            if (confirm == false) {
+                this.confirmDialog = false;
+                return;
+            }
+            await create_epub(this.epub);
+            this.confirmDialog = false;
         },
     },
 };
