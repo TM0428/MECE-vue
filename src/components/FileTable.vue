@@ -1,16 +1,4 @@
 <template>
-    <!-- <draggable v-model="files" tag="tbody" item-key="id">
-            <template #item="{ element }">
-                <tr>
-                    <FileTableContent
-                        :efile="element"
-                        @update:file="updateFile(id, data)"
-                        @delete:file="deleteFile(id)"
-                        ref="fileTableContent"
-                    />
-                </tr>
-            </template>
-        </draggable> -->
     <v-infinite-scroll
         height="300px"
         :items="showFile"
@@ -27,33 +15,32 @@
                     <th><v-icon :icon="mdiTrashCanIcon"></v-icon></th>
                 </tr>
             </thead>
-            <tbody>
-                <template v-for="file in showFile" :key="file.id">
+            <draggable v-model="showFile" tag="tbody" item-key="id">
+                <template #item="{ element }">
                     <tr>
                         <FileTableContent
-                            :efile="file"
+                            :efile="element"
                             @update:file="updateFile(id, data)"
                             @delete:file="deleteFile(id)"
                             ref="fileTableContent"
                         />
                     </tr>
                 </template>
-            </tbody>
+            </draggable>
         </v-table>
     </v-infinite-scroll>
-    <v-btn @click="debug">Debug</v-btn>
 </template>
 
 <script>
 import FileTableContent from "./FileTableContent.vue";
-// import draggable from "vuedraggable";
+import draggable from "vuedraggable";
 import { mdiTrashCan } from "@mdi/js";
 
 export default {
     name: "FileTable",
     components: {
         FileTableContent,
-        // draggable,
+        draggable,
     },
     props: {
         prop_files: {
@@ -78,15 +65,16 @@ export default {
         },
         async contentsReload({ done }) {
             const length = this.showFile.length;
+            if (length >= this.prop_files.length) {
+                done("empty");
+                return;
+            }
             for (let i = length; i < length + 10; i++) {
                 if (this.prop_files[i]) {
                     this.showFile.push(this.prop_files[i]);
                 }
             }
             done("ok");
-        },
-        debug() {
-            console.log(this.files);
         },
     },
     computed: {
