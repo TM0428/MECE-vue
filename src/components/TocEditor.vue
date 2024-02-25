@@ -92,9 +92,9 @@ export default {
         createObjectURL(file) {
             return URL.createObjectURL(file);
         },
-        updateSelectFile(file) {
-            if (file) {
-                this.toc_edit.file = file;
+        updateSelectFile(efile) {
+            if (efile) {
+                this.toc_edit.setEfile(efile);
                 this.error_dialog = false;
             }
             this.dialog = false;

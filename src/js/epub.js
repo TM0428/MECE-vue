@@ -1,3 +1,5 @@
+var _ = require("lodash");
+
 export class Creator {
     constructor(
         name = "",
@@ -190,12 +192,21 @@ export class Metadata {
 }
 
 export class TocContent {
-    constructor(title = "title", file, id = "xhtml-p-cover") {
+    constructor(title = "title", efile, id = "xhtml-p-cover") {
         this.title = title;
-        this.file = file;
+        this.efile = efile;
+        if (efile != undefined) {
+            this.file = efile.file;
+        }
         this.children = [];
         this.id = id;
     }
+
+    setEfile(efile) {
+        this.efile = efile;
+        this.file = efile.file;
+    }
+
     /**
      * @param {xmlbuilder} nav_xml
      * @return {xmlbuilder} nav_xml
@@ -206,7 +217,7 @@ export class TocContent {
         nav_point.att("id", this.id);
         nav_point.att("playOrder", playOrder);
         nav_point.ele("navLabel").ele("text", this.title);
-        nav_point.ele("content").att("src", this.file.href);
+        nav_point.ele("content").att("src", this.efile.href);
         for (let child of this.children) {
             child.xml(nav_point);
         }
@@ -221,7 +232,7 @@ export class TocContent {
     xml(nav_xml) {
         let nav_point = nav_xml.ele("li");
         let a = nav_point.ele("a", this.title);
-        a.att("href", this.file.href);
+        a.att("href", this.efile.href);
         if (this.children.length > 0) {
             let ol = nav_point.ele("ol");
             for (let child of this.children) {
@@ -232,11 +243,18 @@ export class TocContent {
     }
 }
 
-export class ExtendedFile extends File {
-    constructor(file, id = "id", media_type = "", page_style = "") {
-        super(file);
+export class ExtendedFile {
+    constructor(file, id = 0, page_style = "") {
+        this.file = file;
         this.id = id;
-        this.media_type = media_type;
+        this.media_type = file.type;
+        this.page_style = page_style;
+        this.width = 0;
+        this.height = 0;
+        this.cover = false;
+        this.file_path = this.file.path;
+    }
+    changePageStyle(page_style) {
         this.page_style = page_style;
     }
 }
@@ -249,6 +267,7 @@ export class Epub {
         this.description = new Description();
         this.metadata = new Metadata();
         this.files = [];
+        this.file_id = 0;
         this.tables = [];
         this.create_folder = "./sample";
         this.file_name = "sample.epub";
@@ -298,31 +317,26 @@ export async function create_epub_from_isbn(isbn) {
     const response = await fetch(url);
     const data = await response.json();
     const book = data[0];
+    const onix = data[0].onix;
     console.log(book);
     const epub = new Epub();
     epub.title = new Title(
-        data[0].onix.DescriptiveDetail.TitleDetail.TitleElement.TitleText
-            .content || "",
-        data[0].onix.DescriptiveDetail.TitleDetail.TitleElement.TitleText
+        onix.DescriptiveDetail.TitleDetail.TitleElement.TitleText.content || "",
+        onix.DescriptiveDetail.TitleDetail.TitleElement.TitleText
             .collationkey || ""
     );
     epub.creators = [];
-    for (
-        let i = 0;
-        i < data[0].onix.DescriptiveDetail.Contributor.length;
-        i++
-    ) {
+    for (let i = 0; i < onix.DescriptiveDetail.Contributor.length; i++) {
         let id = "creator" + (i + 1).toString().padStart(2, "0");
         epub.creators.push(
             new Creator(
-                data[0].onix.DescriptiveDetail.Contributor[i].PersonName
-                    .content || "",
-                data[0].onix.DescriptiveDetail.Contributor[i].PersonName
-                    .collationkey || "",
+                onix.DescriptiveDetail.Contributor[i].PersonName.content || "",
+                onix.DescriptiveDetail.Contributor[i].PersonName.collationkey ||
+                    "",
                 "aut",
                 Number(
-                    data[0].onix.DescriptiveDetail.Contributor[i]
-                        .SequenceNumber || i + 1
+                    onix.DescriptiveDetail.Contributor[i].SequenceNumber ||
+                        i + 1
                 ),
                 id,
                 i
@@ -330,29 +344,32 @@ export async function create_epub_from_isbn(isbn) {
         );
     }
     epub.publishers = [];
-    if (data[0].onix.PublishingDetail.Publisher.PublisherName != undefined) {
+    if (_.has(onix, "PublishingDetail.Publisher.PublisherName")) {
         epub.publishers.push(
-            new Publisher(
-                data[0].onix.PublishingDetail.Publisher.PublisherName || "",
-                ""
-            )
+            new Publisher(onix.PublishingDetail.Publisher.PublisherName, "")
+        );
+    } else {
+        epub.publishers.push(
+            new Publisher(_.get(epub, "summary.publisher", ""), "")
         );
     }
 
     let description = "";
-    for (let i = 0; i < data[0].onix.CollateralDetail.TextContent.length; i++) {
-        if (
-            data[0].onix.CollateralDetail.TextContent[i].ContentAudience ===
-            "00" /* Description */
-        ) {
-            description += data[0].onix.CollateralDetail.TextContent[i].Text;
+    if (_.has(onix, "CollateralDetail.TextContent")) {
+        for (let i = 0; i < onix.CollateralDetail.TextContent.length; i++) {
+            if (
+                onix.CollateralDetail.TextContent[i].ContentAudience ===
+                "00" /* Description */
+            ) {
+                description += onix.CollateralDetail.TextContent[i].Text;
+            }
         }
     }
 
     epub.description = new Description(description);
 
     if (book.hanmoto) {
-        epub.metadata.modified = new Date(book.hanmoto.datemodified);
+        epub.metadata.modified = new Date(book.hanmoto.datecreated);
     }
 
     return epub;
