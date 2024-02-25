@@ -217,7 +217,7 @@ export class TocContent {
         nav_point.att("id", this.id);
         nav_point.att("playOrder", playOrder);
         nav_point.ele("navLabel").ele("text", this.title);
-        nav_point.ele("content").att("src", this.file.href);
+        nav_point.ele("content").att("src", this.efile.href);
         for (let child of this.children) {
             child.xml(nav_point);
         }
@@ -252,6 +252,7 @@ export class ExtendedFile {
         this.width = 0;
         this.height = 0;
         this.cover = false;
+        this.file_path = this.file.path;
     }
     changePageStyle(page_style) {
         this.page_style = page_style;

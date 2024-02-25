@@ -2,6 +2,7 @@
     <v-infinite-scroll
         height="300px"
         :items="showFile"
+        mode="manual"
         :onLoad="contentsReload"
     >
         <v-table fixed-header>
@@ -49,12 +50,18 @@ export default {
         },
     },
     emits: ["update:files", "update:file", "delete:file"],
-    created() {},
     data() {
         return {
             mdiTrashCanIcon: mdiTrashCan,
             showFile: [],
         };
+    },
+    mounted() {
+        for (let i = 0; i < 10; i++) {
+            if (this.prop_files[i]) {
+                this.showFile.push(this.prop_files[i]);
+            }
+        }
     },
     methods: {
         updateFile(id, data) {
@@ -75,18 +82,6 @@ export default {
                 }
             }
             done("ok");
-        },
-    },
-    computed: {
-        files: {
-            get() {
-                return this.prop_files;
-            },
-            set(value) {
-                // this.epub.files = value;
-                console.log(value);
-                this.$emit("update:files", value);
-            },
         },
     },
 };

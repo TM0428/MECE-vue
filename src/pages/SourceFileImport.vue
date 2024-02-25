@@ -36,6 +36,7 @@
                     @update:file="updateReactiveFile(id, data)"
                     @update:files="updateReactiveFiles($event)"
                     @delete:file="deleteReactiveFile(id)"
+                    ref="fileTable"
                 />
             </v-col>
         </v-row>

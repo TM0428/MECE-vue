@@ -10,6 +10,8 @@ export async function create_epub(epub) {
     if (epub.working_folder == undefined) {
         return;
     }
+    epub.file_name = epub.title.title.replace("?", "_") + ".epub";
+    console.log("create_epub: " + epub.file_name);
     // create_mimetype(epub);
     await create_conteiner_xml(epub);
     await image_copy(epub);
@@ -46,6 +48,7 @@ async function create_epub_file(epub) {
     append_file(archive, working_folder, "META-INF");
     append_file(archive, working_folder, "item");
     const content = await archive.generateAsync({ type: "nodebuffer" });
+    console.log("create_epub_file: " + file_path);
     await fs.promises.writeFile(file_path, content);
 }
 
@@ -387,7 +390,7 @@ async function create_standard_opf(epub) {
         const image_id = image_file_path.split("/").pop().split(".")[0];
         item.att("id", image_id);
         item.att("href", image_file_path);
-        item.att("media-type", file.type);
+        item.att("media-type", file.file.type);
         if (file.cover != undefined && file.cover == true) {
             item.att("properties", "cover-image");
         }
