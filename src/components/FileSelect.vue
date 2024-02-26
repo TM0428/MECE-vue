@@ -37,10 +37,25 @@
                     </v-card>
                 </v-col>
             </v-row>
-            <v-pagination
+            <v-row justify="center">
+                <v-col cols="9">
+                    <v-pagination
+                        v-model="currentPage"
+                        :length="totalPages"
+                    ></v-pagination>
+                </v-col>
+                <v-col cols="3">
+                    <v-select
+                        :items="listPages"
+                        v-model="currentPage"
+                        width="50px"
+                    ></v-select>
+                </v-col>
+            </v-row>
+            <!-- <v-pagination
                 v-model="currentPage"
                 :length="totalPages"
-            ></v-pagination>
+            ></v-pagination> -->
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions class="mt-auto">
@@ -90,6 +105,9 @@ export default {
     computed: {
         totalPages() {
             return Math.ceil(this.epub.files.length / this.itemsPerPage);
+        },
+        listPages() {
+            return Array.from({ length: this.totalPages }, (_, i) => i + 1);
         },
         displayedFiles() {
             const start = (this.currentPage - 1) * this.itemsPerPage;
