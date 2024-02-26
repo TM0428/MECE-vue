@@ -59,23 +59,15 @@
                         :confirmNo="this.$t('makeEpubForm.no')"
                         @confirm="makeEpub"
                     ></confirm-dialog>
-                    <!-- <v-card>
-                        <v-card-title>
-                            {{ this.$t("makeEpubForm.confirm") }}
-                        </v-card-title>
-                        <v-card-text>
-                            {{ this.$t("makeEpubForm.confirmMessage") }}
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-btn @click="makeEpub">
-                                {{ this.$t("makeEpubForm.yes") }}
-                            </v-btn>
-                            <v-btn @click="confirmDialog = false">
-                                {{ this.$t("makeEpubForm.no") }}
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card> -->
                 </v-dialog>
+                <v-btn
+                    @click="this.$router.push('/')"
+                    variant="outlined"
+                    block
+                    size="large"
+                >
+                    {{ this.$t("makeEpubForm.gotoFirst") }}
+                </v-btn>
             </v-col>
         </v-row>
     </v-container>
